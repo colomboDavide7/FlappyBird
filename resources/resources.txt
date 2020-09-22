@@ -1,0 +1,20 @@
+# The lines that begin with ‘#’ character are considered as comment.
+
+# This file defines all the resources that the application needs to load 
+# to create ALL the graphics component of this application.
+
+# The lines must match the current sentence:
+# EXAMPLE: resType dir file
+
+# resType
+# 'env' keyword defines the elements that belong to environment object.
+# 'bnd' keyword defines the elements that belong to boundary object.
+# 'ply' keyword defines the elements that belong to player object.
+
+# dir
+# images/,    directory that contains all the images
+# textFiles/, directory that contains all the map files
+
+bnd images/ wall.png
+ply images/ bird.png
+env images/ background.png
