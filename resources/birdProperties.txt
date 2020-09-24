@@ -1,0 +1,15 @@
+# The FlappyBird property file.
+
+# The lines that begin with '#' or are empty are ignored.
+
+path = images/bird.png
+nSprite = 3
+nRow = 1
+nCol = 3
+HspaceBetweenSprite = 21
+HbeginSpace = 6
+HendSpace = 10
+VbeginSpace = 6
+VendSpace = 6
+width = 29
+height = 20

@@ -11,12 +11,12 @@ import java.awt.Image;
  *
  * @author davidecolombo
  */
-public class Wall extends GraphicsObject {
-    
-    public Wall(Image image, int envID) {
-        super(image, envID);
-    }
+public class Wall extends InteractionObject {
 
+    public Wall(int id, Image img) {
+        super(id, img);
+    }
+    
     @Override
     public Image getImage() {
         return super.image;
@@ -42,4 +42,10 @@ public class Wall extends GraphicsObject {
         return super.toString() + 
                "type = " + this.getType();
     }
+
+    @Override
+    public void interaction() {
+        // TODO: collision
+    }
+    
 }

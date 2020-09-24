@@ -15,12 +15,13 @@ import java.util.List;
  */
 public class Environment {
     
-    private List<GraphicsObject> boundaryObjects;
-    private GraphicsObject player;
+    private List<InteractionObject> powerUps;
+    private List<InteractorObject> enemies;
+    private InteractorObject player;
     private Image background;
     
     public Environment(Image background){
-        boundaryObjects = new ArrayList<>();
+        powerUps = new ArrayList<>();
         this.background = background;
     }
     
@@ -28,12 +29,12 @@ public class Environment {
         return this.background;
     }
     
-    void setPlayer(GraphicsObject player){
+    void setPlayer(InteractorObject player){
         this.player = player;
     }
     
-    void addBoundary(GraphicsObject boundary){
-        this.boundaryObjects.add(boundary);
+    void addBoundary(InteractionObject boundary){
+        this.powerUps.add(boundary);
     }
     
 //    @Override

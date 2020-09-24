@@ -15,14 +15,12 @@ import java.awt.image.BufferedImage;
  */
 public abstract class GraphicsObject {
     
-    protected int envID;
     protected Image image;
     protected int xPosition;
     protected int yPosition;
     
-    public GraphicsObject(Image image, int envID){
-        this.image = image;
-        this.envID = envID;
+    public GraphicsObject(Image img){
+        this.image = img;
     }
     
     public abstract Image getImage();
@@ -32,10 +30,6 @@ public abstract class GraphicsObject {
     public abstract int getYPositionInPixel();
     
     public abstract String getType();
-            
-    protected int getEnvID(){
-        return this.envID;
-    }
     
     protected Image cloneImage(){
         BufferedImage clonedImage = new BufferedImage(this.image.getWidth(null), 
@@ -50,11 +44,10 @@ public abstract class GraphicsObject {
     @Override
     public String toString(){
         String escape = "\n";
-        return "envID = " + this.envID + escape +
-               "width = " + this.image.getWidth(null) + escape + 
+        return "width = " + this.image.getWidth(null) + escape + 
                "height = " + this.image.getHeight(null) + escape +
                "xPos = " + this.xPosition + escape + 
                "yPos = " + this.yPosition + escape;
-                
     }
+    
 }

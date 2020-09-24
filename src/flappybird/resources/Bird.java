@@ -11,10 +11,10 @@ import java.awt.Image;
  *
  * @author davidecolombo
  */
-public class Bird extends GraphicsObject {
+public class Bird extends Player {
 
-    public Bird(Image image, int envID) {
-        super(image, envID);
+    public Bird(Image img) {
+        super(img);
     }
 
     @Override
@@ -38,9 +38,14 @@ public class Bird extends GraphicsObject {
     }
     
     @Override
+    public void update() {
+        // TODO: move obj
+    }
+    
+    @Override
     public String toString(){
         return super.toString() + 
                "type = " + getType();
     }
-    
+
 }

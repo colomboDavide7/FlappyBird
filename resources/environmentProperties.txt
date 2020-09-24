@@ -1,0 +1,10 @@
+# This file defines all the properties of and environment object.
+
+# The lines that begin with '#' or are empty are ignored.
+
+envID = 1
+path = images/background.jpg
+nWall = 5
+dist = 70
+width = 512
+height = 512

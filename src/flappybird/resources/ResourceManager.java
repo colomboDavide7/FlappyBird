@@ -15,9 +15,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import javax.imageio.ImageIO;
 
 /**
@@ -38,28 +36,23 @@ public class ResourceManager {
         return theInstance;
     }
     
-// ===========================================================================================================
-    public enum ResourceType{
-        ENV, BND, PLY;
-    }
-    
-    private final String BETWEEN_PROP_SEPARATOR = ";";
+// ===========================================================================================================    
     private final String KEY_VALUE_SEPARATOR = "=";
-    
-    private List<String> lines = new ArrayList<>();
     private boolean resourcesLoaded = false;
     
-    private List<ObjectProperties> properties = new ArrayList<>();
     private GraphicsObject wallPrototype;
     private GraphicsObject birdPrototype;
     private Environment envPrototype;
+    
+    public enum PropertiesType {
+        bird, wall, env;
+    }
     
 // ===========================================================================================================
     public void loadResources(String propertyFile){
         try{
             checkMultipleLoading();
-            loadProperties(propertyFile);
-            createResources();
+            loadPropertiesAndCreatePrototypes(propertyFile);
             resourcesLoaded = true;
         }catch(LoadException ex){
             System.err.println(ex.errorMessage());
@@ -72,16 +65,16 @@ public class ResourceManager {
             throw new LoadException(LoadException.ErrorCode.MULTIPLE_LOADING);
     }
     
-    private void loadProperties(String propertyFile) throws LoadException{
-        openAndReadTextFile(propertyFile);
-        createProperties();
+    private void loadPropertiesAndCreatePrototypes(String propertyFile) throws LoadException{
+        List<String> files = openAndReadTextFile(propertyFile);
+        createProperties(files);
     }
     
 // ===========================================================================================================
-    private void openAndReadTextFile(String filename) throws LoadException {
+    private List<String> openAndReadTextFile(String filename) throws LoadException {
+        List<String> lines = new ArrayList<>();
         try{
             BufferedReader reader = new BufferedReader(new FileReader(filename));
-            
             String line;
             while(true){
                 line = reader.readLine();
@@ -96,90 +89,72 @@ public class ResourceManager {
         }catch(IOException ex){
             throw new LoadException(LoadException.ErrorCode.IO_ERROR, filename);
         }
-    }
-        
-// ===========================================================================================================
-    // OBJECT'S PROPERTIES INSTANTIATION
-// ===========================================================================================================
-    private void createProperties() throws LoadException {
-        for(String line : lines)
-            parsePropertyLine(line.split(BETWEEN_PROP_SEPARATOR));
-    }
-    
-// ===========================================================================================================
-    private void parsePropertyLine(String[] lineArgs) throws LoadException{
-        Map<String, String> myProperties = new HashMap<>();
-        
-        for(String prop : lineArgs)
-            parsePropertyString(myProperties, prop);
-            
-        this.properties.add(new ObjectProperties(myProperties));
-    }
-    
-// ===========================================================================================================
-    private void parsePropertyString(Map<String, String> myProperties, String property) throws LoadException {
-        String[] keyValuePair = property.split(KEY_VALUE_SEPARATOR);
-        String key = keyValuePair[0].trim();
-        
-        if(!ObjectProperties.isValid(key))
-            throw new LoadException(LoadException.ErrorCode.PROPERTY_NOT_FOUND, key);
-        
-        String value = keyValuePair[1].trim();
-        myProperties.put(key, value);
-    }
-            
-// ===========================================================================================================
-    // OBJECT'S RESOURCES INSTANTIATION
-// ===========================================================================================================
-    private void createResources() throws LoadException {
-        for(ObjectProperties prop : properties)
-            parseProperty(prop);
+        return lines;
     }
       
-// ===========================================================================================================
-    private void parseProperty(ObjectProperties myProp) throws LoadException {
-        String resType = myProp.getPropertyByKey("resType");
-        if(resType.equalsIgnoreCase(ResourceType.PLY.name())){
-            createBirdPrototype(myProp);
-        }else if(resType.equalsIgnoreCase(ResourceType.BND.name())){
-            createWallPrototype(myProp);
-        }else if(resType.equalsIgnoreCase(ResourceType.ENV.name())){
-            createEnvironment(myProp);
+    private void createProperties(List<String> files) throws LoadException {
+        ObjectPropertiesIF myProperties;
+        String filename;
+        String propType;
+        String[] lineArgs;
+        List<String> lines;
+        
+        for(String file : files){
+            lineArgs = file.split(";");
+            filename = lineArgs[0].trim();
+            propType = lineArgs[1].trim();
+            
+            if(propType.equalsIgnoreCase(PropertiesType.bird.name())){
+                lines = openAndReadTextFile(filename);
+                myProperties = new BirdProperties();
+                parsePropertyFile(myProperties, lines);
+                createBirdPrototype(myProperties);
+                System.out.println(myProperties);
+            }
         }
     }
     
-// ===========================================================================================================
-    private void createWallPrototype(ObjectProperties myProp) throws LoadException {
-        int envID = Integer.parseInt(myProp.getPropertyByKey("envID"));
-        Image resizedImage = tryToResizeImage(myProp);
-        this.wallPrototype = new Wall(resizedImage, envID);
+    private void parsePropertyFile(ObjectPropertiesIF myProperties, List<String> lines) throws LoadException {
+        for(String line : lines)
+            parsePropertyLine(myProperties, line);
     }
     
-    private void createBirdPrototype(ObjectProperties myProp) throws LoadException {
+// ===========================================================================================================
+    private void parsePropertyLine(ObjectPropertiesIF myProperties, String line) throws LoadException{
+        String[] keyValuePair = line.split(KEY_VALUE_SEPARATOR);
+        String key = keyValuePair[0].trim();
+        String value = keyValuePair[1].trim();
+        myProperties.putProperty(key, value);
+    }
+    
+// ===========================================================================================================
+    private void createWallPrototype(ObjectPropertiesIF myProp) throws LoadException {
         int envID = Integer.parseInt(myProp.getPropertyByKey("envID"));
+        Image resizedImage = tryToResizeImage(myProp);
+        this.wallPrototype = new Wall(envID, resizedImage);
+    }
+    
+    private void createBirdPrototype(ObjectPropertiesIF myProp) throws LoadException {
         // ==========================================
         // TODO: estrarre le sprite e ridimensionarle
         // ==========================================
         
         Image resizedImage = tryToResizeImage(myProp);
-        this.birdPrototype = new Bird(resizedImage, envID);
+        this.birdPrototype = new Bird(resizedImage);
     }
     
-    private void createEnvironment(ObjectProperties myProp) throws LoadException {
-        int envID = Integer.parseInt(myProp.getPropertyByKey("envID"));
+    private void createEnvironment(ObjectPropertiesIF myProp) throws LoadException {
         Image resizedImage = tryToResizeImage(myProp);
-//        ObjectProperties myProperties = searchProperties(envID, resType);
+//        ObjectProperties myProperties = searchProperties(myProp);
         this.envPrototype = new Environment(resizedImage);
     }
     
-//    private ObjectProperties searchProperties(int envID, String resType) throws LoadException {
-//        for(ObjectProperties p : properties)
-//            if(envID == p.getAssociatedEnvironmentID() && resType.equals(p.getAssociatedResourceType()))
-//                return p;
-//        throw new LoadException(LoadException.ErrorCode.PROPERTY_NOT_FOUND, Integer.toString(envID));
+//    private ObjectProperties searchProperties(ObjectPropertiesIF myProp) throws LoadException {
+//        int envID = Integer.parseInt(myProp.getPropertyByKey("envID"));
+//        
 //    }    
 
-    private Image tryToResizeImage(ObjectProperties myProp) throws LoadException {
+    private Image tryToResizeImage(ObjectPropertiesIF myProp) throws LoadException {
         try{
             String path = myProp.getPropertyByKey("path");
             Image image = readImageFromFile(path);
