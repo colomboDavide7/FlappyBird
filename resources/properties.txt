@@ -1,0 +1,24 @@
+# This file defines the properties of each available environment.
+
+# The valid properties are:
+# - envID: positive integer begin from 1
+# - resType: env | bnd | ply
+# - width: desired width of the associated image in pixel
+# - height: desired height of the associated image in pixel
+# - nWalls: number of visible walls:
+# - dist: horizontal distance between a wall and the next to it
+# - nSprite: number of sprite into the associated image file
+# - dir: directory in which there's the file
+# - filename: the name of the file
+
+# The properties must be ALL on the same line, separated by a single ';' character.
+
+# Each line specifies the properties of an object given the envID and the resType. 
+# These two properties must never miss. Also the dir and filename must never miss.
+
+# The file are read from the current working dir (if one is given).
+# The current working dir must be setted to './resources'
+
+envID = 1; resType = env; width = 288; height = 512; nWall = 5; dist = 75; path = images/background.jpg
+envID = 1; resType = bnd; width = 32;  height = 150; nSprite = 1; 	   path = images/wall.png
+envID = 1; resType = ply; width = 32; height = 32;  nSprite = 3; 	   path = images/bird.png

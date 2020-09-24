@@ -11,9 +11,9 @@ import java.awt.Image;
  *
  * @author davidecolombo
  */
-public class Wall extends GraphicsObject {
-    
-    public Wall(Image image, int envID) {
+public class Bird extends GraphicsObject {
+
+    public Bird(Image image, int envID) {
         super(image, envID);
     }
 
@@ -23,23 +23,24 @@ public class Wall extends GraphicsObject {
     }
 
     @Override
-    public synchronized int getXPositionInPixel() {
+    public int getXPositionInPixel() {
         return super.xPosition;
     }
 
     @Override
-    public synchronized int getYPositionInPixel() {
+    public int getYPositionInPixel() {
         return super.yPosition;
     }
 
     @Override
     public String getType() {
-        return "Wall";
+        return "Bird";
     }
     
     @Override
     public String toString(){
         return super.toString() + 
-               "type = " + this.getType();
+               "type = " + getType();
     }
+    
 }

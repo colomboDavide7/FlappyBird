@@ -11,12 +11,20 @@ package flappybird.resources;
  */
 public class LoadException extends Exception {
     
-    public enum ErrorCode{
-        OK, MULTIPLE_LOADING, RESOURCE_NOT_FOUND, TEXT_FILE_ERROR;
+    public enum ErrorCode {
+        MULTIPLE_LOADING, IO_ERROR,
+        RESOURCE_NOT_FOUND, PROPERTY_NOT_FOUND, 
+        EXTERNAL_API_ERROR;
     }
     
-    private ErrorCode errorCode = ErrorCode.OK;
+    private String errorMessage = "";
+    private ErrorCode errorCode;
     private String invalidResource = "";
+    
+    public LoadException(String errorMessage){
+        this.errorCode = ErrorCode.EXTERNAL_API_ERROR;
+        this.errorMessage = errorMessage;
+    }
     
     public LoadException(ErrorCode errorCode){
         this.errorCode = errorCode;
@@ -27,21 +35,26 @@ public class LoadException extends Exception {
         this.invalidResource = invalidResource;
     }
     
-    public String errorMessage() throws Exception{
+    public String errorMessage() {
         switch(errorCode){
-            case OK: 
-                throw new Exception("ERROR: Should not get here!");
+            case EXTERNAL_API_ERROR: 
+                return this.errorMessage;
+                
             case MULTIPLE_LOADING:
                 return String.format("%s error code has occured.\n"
-                                   + "You can't load the resources multiple times", 
-                                     errorCode);
+                                   + "You can't load the '%s' file multiple times", 
+                                     errorCode, invalidResource);
             case RESOURCE_NOT_FOUND: 
                 return String.format("%s error code has occured.\n"
-                                   + "The resource correspond to '%s' is invalid.", 
+                                   + "The resource correspond to '%s' was not found.", 
                                      errorCode, invalidResource);
-            case TEXT_FILE_ERROR: 
+            case IO_ERROR: 
                 return String.format("%s error code has occured.\n"
-                                   + "Error reading '%s' file.", 
+                                   + "Error with '%s' file.", 
+                                     errorCode, invalidResource);
+            case PROPERTY_NOT_FOUND: 
+                return String.format("%s error code has occured.\n"
+                                   + "No key property associated to '%s'.", 
                                      errorCode, invalidResource);
         }
         return "";

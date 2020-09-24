@@ -15,6 +15,13 @@
 # images/,    directory that contains all the images
 # textFiles/, directory that contains all the map files
 
-bnd images/ wall.png
-ply images/ bird.png
-env images/ background.png
+# envID
+# A positive integer indicating which environment the resource belongs to
+
+envID = 1; resType = bnd; dir = images/; filename = wall.png
+envID = 1; resType = ply; dir = images/; filename = bird.png
+envID = 1; resType = env; dir = images/; filename = background.jpg
+
+# bnd images/ 1 wall.png
+# ply images/ 1 bird.png
+# env images/ 1 background.jpg

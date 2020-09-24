@@ -5,6 +5,8 @@
  */
 package flappybird.resources;
 
+import java.awt.Image;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -13,9 +15,30 @@ import java.util.List;
  */
 public class Environment {
     
-    private List<Wall> walls;
+    private List<GraphicsObject> boundaryObjects;
+    private GraphicsObject player;
+    private Image background;
     
-    public Environment(){
-        
+    public Environment(Image background){
+        boundaryObjects = new ArrayList<>();
+        this.background = background;
     }
+    
+    public Image getBackground(){
+        return this.background;
+    }
+    
+    void setPlayer(GraphicsObject player){
+        this.player = player;
+    }
+    
+    void addBoundary(GraphicsObject boundary){
+        this.boundaryObjects.add(boundary);
+    }
+    
+//    @Override
+//    public String toString(){
+//        return properties.toString();
+//    }
+    
 }
