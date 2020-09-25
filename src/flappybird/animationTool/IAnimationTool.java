@@ -5,6 +5,7 @@
  */
 package flappybird.animationTool;
 
+import flappybird.resources.Animation;
 import java.awt.image.BufferedImage;
 
 /**

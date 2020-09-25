@@ -5,47 +5,19 @@
  */
 package flappybird.resources;
 
-import java.awt.Image;
-
 /**
  *
  * @author davidecolombo
  */
-public class Wall extends InteractionObject {
+public class Wall extends PowerUp {
 
-    public Wall(int id, Image img) {
-        super(id, img);
-    }
-    
-    @Override
-    public Image getImage() {
-        return super.image;
+    public Wall(Animation initA) {
+        super(initA);
     }
 
     @Override
-    public synchronized int getXPositionInPixel() {
-        return super.xPosition;
-    }
-
-    @Override
-    public synchronized int getYPositionInPixel() {
-        return super.yPosition;
-    }
-
-    @Override
-    public String getType() {
-        return "Wall";
-    }
-    
-    @Override
-    public String toString(){
-        return super.toString() + 
-               "type = " + this.getType();
-    }
-
-    @Override
-    public void interaction() {
-        // TODO: collision
+    public void powerUp(Creature creature) {
+        // Azzero la vita della creatura
     }
     
 }

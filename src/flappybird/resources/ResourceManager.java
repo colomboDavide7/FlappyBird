@@ -5,6 +5,9 @@
  */
 package flappybird.resources;
 
+import flappybird.animationTool.AnimationBuilder;
+import flappybird.animationTool.AnimationToolException;
+import flappybird.animationTool.IAnimationTool;
 import flappybird.imageTool.ImageResizer;
 import flappybird.imageTool.ImageToolException;
 import java.awt.Image;
@@ -17,6 +20,9 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.imageio.ImageIO;
 import flappybird.imageTool.IImageTool;
+import java.awt.image.BufferedImage;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -40,8 +46,8 @@ public class ResourceManager {
     private final String KEY_VALUE_SEPARATOR = "=";
     private boolean resourcesLoaded = false;
     
-    private GraphicsObject wallPrototype;
-    private GraphicsObject birdPrototype;
+    private Sprite wallPrototype;
+    private Sprite birdPrototype;
     private Environment envPrototype;
     
     public enum PropertiesType {
@@ -106,7 +112,7 @@ public class ResourceManager {
             
             if(propType.equalsIgnoreCase(PropertiesType.bird.name())){
                 lines = openAndReadTextFile(filename);
-                myProperties = new BirdProperties();
+                myProperties = new SpriteProperties();
                 parsePropertyFile(myProperties, lines);
                 createBirdPrototype(myProperties);
                 System.out.println(myProperties);
@@ -124,23 +130,20 @@ public class ResourceManager {
         String[] keyValuePair = line.split(KEY_VALUE_SEPARATOR);
         String key = keyValuePair[0].trim();
         String value = keyValuePair[1].trim();
+        System.out.println("key = " + key);
+        System.out.println("value = " + value);
         myProperties.putProperty(key, value);
     }
     
 // ===========================================================================================================
     private void createWallPrototype(IProperties myProp) throws LoadException {
-        int envID = Integer.parseInt(myProp.getPropertyByKey("envID"));
-        Image resizedImage = tryToResizeImage(myProp);
-        this.wallPrototype = new Wall(envID, resizedImage);
+        Animation initA = tryToBuildAnimation(myProp);
+        this.wallPrototype = new Wall(initA);
     }
     
     private void createBirdPrototype(IProperties myProp) throws LoadException {
-        // ==========================================
-        // TODO: estrarre le sprite e ridimensionarle
-        // ==========================================
-        
-        Image resizedImage = tryToResizeImage(myProp);
-        this.birdPrototype = new Bird(resizedImage);
+        Animation initA = tryToBuildAnimation(myProp);
+        this.birdPrototype = new Bird(initA);
     }
     
     private void createEnvironment(IProperties myProp) throws LoadException {
@@ -154,6 +157,35 @@ public class ResourceManager {
 //        
 //    }    
 
+    private Animation tryToBuildAnimation(IProperties myProp) throws LoadException{
+        try{
+            String path = myProp.getPropertyByKey("path");
+            BufferedImage spriteSheet = readImageFromFile(path);
+            IAnimationTool builder = new AnimationBuilder();
+            // Properties
+            int spriteWidth = Integer.parseInt(myProp.getPropertyByKey("spriteWidth"));
+            int spriteHeight = Integer.parseInt(myProp.getPropertyByKey("spriteHeight"));
+            int nFrame = Integer.parseInt(myProp.getPropertyByKey("nFrame"));
+            int nRow = Integer.parseInt(myProp.getPropertyByKey("nRow"));
+            int nCol = Integer.parseInt(myProp.getPropertyByKey("nCol"));
+            int hSpaceBegin = Integer.parseInt(myProp.getPropertyByKey("hSpaceBegin"));
+            int hSpaceBetween = Integer.parseInt(myProp.getPropertyByKey("hSpaceBetween"));
+            int hSpaceEnd = Integer.parseInt(myProp.getPropertyByKey("hSpaceEnd"));
+            int vSpaceBetween = Integer.parseInt(myProp.getPropertyByKey("vSpaceBetween"));
+            int vSpaceBegin = Integer.parseInt(myProp.getPropertyByKey("vSpaceBegin"));
+            int vSpaceEnd = Integer.parseInt(myProp.getPropertyByKey("vSpaceEnd"));
+            // Builder configuration
+            builder.setHorizontalSpaces(hSpaceBegin, hSpaceBetween, hSpaceEnd);
+            builder.setSpriteSheet(spriteSheet);
+            builder.setVerticalSpaces(vSpaceBegin, vSpaceBetween, vSpaceEnd);
+            builder.setSpriteDimensions(spriteWidth, spriteHeight);
+            builder.setSpriteSheetProperties(nRow, nCol, nFrame);
+            return builder.build();
+        } catch (AnimationToolException ex) {
+            throw new LoadException(ex.errorMessage());
+        }
+    }
+    
     private Image tryToResizeImage(IProperties myProp) throws LoadException {
         try{
             String path = myProp.getPropertyByKey("path");
@@ -170,12 +202,12 @@ public class ResourceManager {
         }
     }
     
-    private Image readImageFromFile(String path) throws LoadException {
+    private BufferedImage readImageFromFile(String path) throws LoadException {
         try{
             File f = new File(path);
             if(!f.exists())
                 throw new FileNotFoundException();
-            Image image = ImageIO.read(f);
+            BufferedImage image = ImageIO.read(f);
             return image;
         }catch(FileNotFoundException ex){
             throw new LoadException(LoadException.ErrorCode.RESOURCE_NOT_FOUND, path);

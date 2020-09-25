@@ -15,9 +15,9 @@ import java.util.List;
  */
 public class Environment {
     
-    private List<InteractionObject> powerUps;
-    private List<InteractorObject> enemies;
-    private InteractorObject player;
+    private List<PowerUp> powerUps;
+    private List<Creature> enemies;
+    private Creature player;
     private Image background;
     
     public Environment(Image background){
@@ -29,11 +29,11 @@ public class Environment {
         return this.background;
     }
     
-    void setPlayer(InteractorObject player){
+    void setPlayer(Creature player){
         this.player = player;
     }
     
-    void addBoundary(InteractionObject boundary){
+    void addBoundary(PowerUp boundary){
         this.powerUps.add(boundary);
     }
     

@@ -5,18 +5,18 @@
  */
 package flappybird.resources;
 
-import java.awt.Image;
-
 /**
  *
  * @author davidecolombo
  */
-public abstract class Player extends GraphicsObject {
+public abstract class PowerUp extends Sprite {
     
-    public Player(Image img) {
-        super(img);
+    protected int envID;
+    
+    public PowerUp(Animation initA) {
+        super(initA);
     }
     
-    public abstract void update();
+    public abstract void powerUp(Creature creature);
     
 }

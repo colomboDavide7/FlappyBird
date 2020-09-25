@@ -5,19 +5,14 @@
  */
 package flappybird.resources;
 
-import java.awt.Image;
-
 /**
  *
  * @author davidecolombo
  */
-public abstract class InteractorObject extends GraphicsObject {
+public abstract class Creature extends Sprite {
     
-    protected int envID;
-    
-    public InteractorObject(int id, Image img) {
-        super(img);
-        this.envID = id;
+    public Creature(Animation initA) {
+        super(initA);
     }
     
 }

@@ -6,20 +6,23 @@
 package flappybird.resources;
 
 import java.awt.Image;
+import java.util.List;
 
 /**
  *
  * @author davidecolombo
  */
-public abstract class InteractionObject extends GraphicsObject {
+public class Animation {
     
-    protected int envID;
-    
-    public InteractionObject(int id, Image img) {
-        super(img);
-        this.envID = id;
+    private List<Image> sprites;
+    private int currentFrame = 0;
+            
+    public Animation(List<Image> sprites){
+        this.sprites = sprites;
     }
     
-    public abstract void interaction();
+    public Image getFrame(){
+        return sprites.get(currentFrame);
+    }
     
 }

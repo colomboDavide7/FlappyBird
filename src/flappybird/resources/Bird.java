@@ -5,47 +5,14 @@
  */
 package flappybird.resources;
 
-import java.awt.Image;
-
 /**
  *
  * @author davidecolombo
  */
-public class Bird extends Player {
+public class Bird extends Creature {
 
-    public Bird(Image img) {
-        super(img);
-    }
-
-    @Override
-    public Image getImage() {
-        return super.image;
-    }
-
-    @Override
-    public int getXPositionInPixel() {
-        return super.xPosition;
-    }
-
-    @Override
-    public int getYPositionInPixel() {
-        return super.yPosition;
-    }
-
-    @Override
-    public String getType() {
-        return "Bird";
+    public Bird(Animation initA) {
+        super(initA);
     }
     
-    @Override
-    public void update() {
-        // TODO: move obj
-    }
-    
-    @Override
-    public String toString(){
-        return super.toString() + 
-               "type = " + getType();
-    }
-
 }
