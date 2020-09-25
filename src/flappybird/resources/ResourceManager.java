@@ -7,7 +7,6 @@ package flappybird.resources;
 
 import flappybird.imageTool.ImageResizer;
 import flappybird.imageTool.ImageToolException;
-import flappybird.imageTool.ImageToolIF;
 import java.awt.Image;
 import java.io.BufferedReader;
 import java.io.File;
@@ -17,6 +16,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.imageio.ImageIO;
+import flappybird.imageTool.IImageTool;
 
 /**
  *
@@ -93,7 +93,7 @@ public class ResourceManager {
     }
       
     private void createProperties(List<String> files) throws LoadException {
-        ObjectPropertiesIF myProperties;
+        IProperties myProperties;
         String filename;
         String propType;
         String[] lineArgs;
@@ -114,13 +114,13 @@ public class ResourceManager {
         }
     }
     
-    private void parsePropertyFile(ObjectPropertiesIF myProperties, List<String> lines) throws LoadException {
+    private void parsePropertyFile(IProperties myProperties, List<String> lines) throws LoadException {
         for(String line : lines)
             parsePropertyLine(myProperties, line);
     }
     
 // ===========================================================================================================
-    private void parsePropertyLine(ObjectPropertiesIF myProperties, String line) throws LoadException{
+    private void parsePropertyLine(IProperties myProperties, String line) throws LoadException{
         String[] keyValuePair = line.split(KEY_VALUE_SEPARATOR);
         String key = keyValuePair[0].trim();
         String value = keyValuePair[1].trim();
@@ -128,13 +128,13 @@ public class ResourceManager {
     }
     
 // ===========================================================================================================
-    private void createWallPrototype(ObjectPropertiesIF myProp) throws LoadException {
+    private void createWallPrototype(IProperties myProp) throws LoadException {
         int envID = Integer.parseInt(myProp.getPropertyByKey("envID"));
         Image resizedImage = tryToResizeImage(myProp);
         this.wallPrototype = new Wall(envID, resizedImage);
     }
     
-    private void createBirdPrototype(ObjectPropertiesIF myProp) throws LoadException {
+    private void createBirdPrototype(IProperties myProp) throws LoadException {
         // ==========================================
         // TODO: estrarre le sprite e ridimensionarle
         // ==========================================
@@ -143,7 +143,7 @@ public class ResourceManager {
         this.birdPrototype = new Bird(resizedImage);
     }
     
-    private void createEnvironment(ObjectPropertiesIF myProp) throws LoadException {
+    private void createEnvironment(IProperties myProp) throws LoadException {
         Image resizedImage = tryToResizeImage(myProp);
 //        ObjectProperties myProperties = searchProperties(myProp);
         this.envPrototype = new Environment(resizedImage);
@@ -154,13 +154,13 @@ public class ResourceManager {
 //        
 //    }    
 
-    private Image tryToResizeImage(ObjectPropertiesIF myProp) throws LoadException {
+    private Image tryToResizeImage(IProperties myProp) throws LoadException {
         try{
             String path = myProp.getPropertyByKey("path");
             Image image = readImageFromFile(path);
             int width = Integer.parseInt(myProp.getPropertyByKey("width"));
             int height = Integer.parseInt(myProp.getPropertyByKey("height"));
-            ImageToolIF resizer = new ImageResizer();
+            IImageTool resizer = new ImageResizer();
             resizer.setImageWidthInPixel(width);
             resizer.setImageHeightInPixel(height);
             resizer.setImageToEdit(image);

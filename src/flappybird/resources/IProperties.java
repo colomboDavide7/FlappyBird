@@ -9,7 +9,7 @@ package flappybird.resources;
  *
  * @author davidecolombo
  */
-public interface ObjectPropertiesIF {
+public interface IProperties {
         
     public abstract void putProperty(String key, String value) throws LoadException;
     

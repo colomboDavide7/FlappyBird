@@ -14,7 +14,7 @@ import java.awt.image.BufferedImage;
  *
  * @author davidecolombo
  */
-public class ImageResizer implements ImageToolIF {
+public class ImageResizer implements IImageTool {
     
     private Image toEdit;
     private int widthInPixel;

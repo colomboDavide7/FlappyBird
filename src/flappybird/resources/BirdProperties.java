@@ -13,7 +13,7 @@ import java.util.Set;
  *
  * @author davidecolombo
  */
-public class BirdProperties implements ObjectPropertiesIF {
+public class BirdProperties implements IProperties {
     
     public enum ValidBirdProperties{
         path, nSprite, nRow, nCol, 

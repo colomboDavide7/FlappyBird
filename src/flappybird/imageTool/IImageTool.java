@@ -11,7 +11,7 @@ import java.awt.Image;
  *
  * @author davidecolombo
  */
-public interface ImageToolIF {
+public interface IImageTool {
     
     public abstract Image resize() throws ImageToolException;
     
