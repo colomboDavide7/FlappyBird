@@ -15,15 +15,22 @@ import java.util.List;
 public class Animation implements IAnimation {
     
     private List<Image> sprites;
+    private AnimationType type;
     private int currentFrame = 0;
             
-    public Animation(List<Image> sprites){
+    public Animation(List<Image> sprites, AnimationType type){
         this.sprites = sprites;
+        this.type = type;
     }
     
     @Override
     public Image getFrame(){
         return sprites.get(currentFrame);
+    }
+
+    @Override
+    public AnimationType getType() {
+        return this.type;
     }
     
 }

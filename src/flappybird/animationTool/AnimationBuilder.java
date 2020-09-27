@@ -6,107 +6,86 @@
 package flappybird.animationTool;
 
 import flappybird.resources.Animation;
+import flappybird.resources.AnimationType;
+import flappybird.resources.IAnimation;
+import flappybird.resources.IProperties;
+import flappybird.resources.LoadException;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.imageio.ImageIO;
 
 /**
  *
  * @author davidecolombo
  */
-public class AnimationBuilder implements IAnimationTool {
+public class AnimationBuilder {
 
-    // Default values
-    private final int DEFAULT_ROWS    = 1;
-    private final int DEFAULT_COLS    = 1;
-    private final int DEFAULT_N_FRAME = 1;
-    private final int DEFAULT_HSPACE_BETWEEN = 15;
-    private final int DEFAULT_HSPACE_BEGIN   = 0;
-    private final int DEFAULT_HSPACE_END     = 0;
-    private final int DEFAULT_VSPACE_BETWEEN = 15;
-    private final int DEFAULT_VSPACE_BEGIN   = 0;
-    private final int DEFAULT_VSPACE_END     = 0;
-    private final int DEFAULT_SPRITE_WIDTH   = 32;
-    private final int DEFAULT_SPRITE_HEIGHT  = 32;
-    
-// ================================================================
-    private int nCols = DEFAULT_COLS;
-    private int nRows = DEFAULT_ROWS;
-    private int numberOfFrame   = DEFAULT_N_FRAME;
-    private int hSpaceBetween   = DEFAULT_HSPACE_BETWEEN;
-    private int hSpaceBegin     = DEFAULT_HSPACE_BEGIN;
-    private int hSpaceEnd       = DEFAULT_HSPACE_END;
-    private int vSpaceBetween   = DEFAULT_VSPACE_BETWEEN;
-    private int vSpaceBegin     = DEFAULT_VSPACE_BEGIN;
-    private int vSpaceEnd       = DEFAULT_VSPACE_END;
-    private int spriteWidth     = DEFAULT_SPRITE_WIDTH;
-    private int spriteHeight    = DEFAULT_SPRITE_HEIGHT;
-    private BufferedImage spriteSheet = null;
-    private int x = 0, y = 0;
-    
-    @Override
-    public void setSpriteSheet(BufferedImage img) {
-        this.spriteSheet = img;
-    }
-    
-    @Override
-    public void setSpriteSheetProperties(int nRow, int nCol, int nFrame) {
-        this.nRows = nRow;
-        this.nCols = nCol;
-        this.numberOfFrame = nFrame;
-    }
-
-    @Override
-    public void setHorizontalSpaces(int beginSpace, int betweenSpace, int endspace) {
-        this.hSpaceBegin   = beginSpace;
-        this.hSpaceBetween = betweenSpace;
-        this.hSpaceEnd     = endspace;
-    }
-
-    @Override
-    public void setVerticalSpaces(int beginSpace, int betweenSpace, int endspace) {
-        this.vSpaceBegin   = beginSpace;
-        this.vSpaceBetween = betweenSpace;
-        this.vSpaceEnd     = endspace;
-    }
-
-    @Override
-    public void setSpriteDimensions(int w, int h) {
-        this.spriteWidth  = w;
-        this.spriteHeight = h;
-    }
-    
-// ================================================================
-    @Override
-    public Animation build() throws AnimationToolException {
-        
-        checkBuilderParameters();
-        
-        List<Image> sprites = new ArrayList<>(numberOfFrame);
-        for(int frame = 0; frame < this.numberOfFrame; frame++){
-            sprites.add(extractSprite());
+    public static IAnimation build(IProperties prop) throws AnimationToolException {        
+        try {
+            String path = prop.getPropertyByKey("path");
+            BufferedImage sheet = tryToReadImage(path);
+            List<Image> sprites = getSpriteListFromProperty(prop, sheet);
+            AnimationType type = getTypeFromProperty(prop);
+            
+            return new Animation(sprites, type);
+        } catch (LoadException ex) {
+            throw new AnimationToolException(ex.errorMessage());
         }
-        
-        return new Animation(sprites);
-    }
-
-    private void checkBuilderParameters() throws AnimationToolException {
-        if(numberOfFrame > nCols*nRows || numberOfFrame == 0)
-            throw new AnimationToolException(AnimationToolException.ErrorCode.INCOMPATIBLE_SHEET_PROPERTIES);
-        else if(spriteSheet == null)
-            throw new AnimationToolException(AnimationToolException.ErrorCode.MISSING_SPRITE_SHEET);
     }
     
-    private Image extractSprite()  {
-        Image sprite = spriteSheet.getSubimage(x + hSpaceBegin, 
-                                               y + vSpaceBegin, 
-                                               spriteWidth, 
-                                               spriteHeight);
-        x += (spriteWidth + hSpaceBetween);
-        if(x >= spriteSheet.getWidth() - hSpaceEnd)
-            y += (spriteHeight + vSpaceBetween);
-        return sprite;
+    private static BufferedImage tryToReadImage(String path) throws AnimationToolException {
+        try{
+            BufferedImage img = ImageIO.read(new File(path));
+            return img;
+        }catch(IOException ex){
+            throw new AnimationToolException(AnimationToolException.ErrorCode.IO_ERROR, path);
+        }
     }
     
+    private static AnimationType getTypeFromProperty(IProperties prop) throws AnimationToolException{
+        try {
+            String type = prop.getPropertyByKey("type");
+            
+            if(!AnimationType.isValid(type))
+                throw new AnimationToolException(AnimationToolException.ErrorCode.INVALID_TYPE, type);
+            return AnimationType.valueOf(type);
+        } catch (LoadException ex) {
+            throw new AnimationToolException(ex.errorMessage());
+        }
+    }
+    
+    private static List<Image> getSpriteListFromProperty(IProperties prop, BufferedImage sheet) throws AnimationToolException {
+        try{
+            int upperLeftX = 0;
+            int upperLeftY = 0;
+            int frame = Integer.parseInt(prop.getPropertyByKey("frame"));
+            List<Image> sprites = new ArrayList<>(frame);
+            int col   = Integer.parseInt(prop.getPropertyByKey("col"));
+            int row   = Integer.parseInt(prop.getPropertyByKey("row"));
+            int spriteWidth = sheet.getWidth() / col;
+            int spriteHeight = sheet.getHeight() / row;
+            
+            for(int i = 0; i < frame; i++){
+                sprites.add(
+                        sheet.getSubimage(upperLeftX, upperLeftY, spriteWidth, spriteHeight)
+                );
+                
+                upperLeftX += spriteWidth;
+                
+                if(upperLeftX >= spriteWidth * col){
+                    upperLeftX = 0;
+                    upperLeftY += spriteHeight;
+                }
+                
+            }
+            
+            return sprites;
+        }catch(LoadException ex){
+            throw new AnimationToolException(ex.errorMessage());
+        }
+    }
 }

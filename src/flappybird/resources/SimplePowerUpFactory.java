@@ -5,7 +5,7 @@
  */
 package flappybird.resources;
 
-import java.util.Map;
+import java.util.List;
 
 /**
  *
@@ -13,7 +13,7 @@ import java.util.Map;
  */
 public class SimplePowerUpFactory {
     
-    public static IPowerUp createPrototype(AvailablePowerUp type, Map<AnimationType, IAnimation> animations){
+    public static IPowerUp createPrototype(AvailablePowerUp type, List<IAnimation> animations){
         IPowerUp prototype = null;
         
         switch(type){

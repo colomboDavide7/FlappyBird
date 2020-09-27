@@ -15,4 +15,6 @@ public interface IAnimation {
     
     public abstract Image getFrame();
     
+    public abstract AnimationType getType();
+    
 }

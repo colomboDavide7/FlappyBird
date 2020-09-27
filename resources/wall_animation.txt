@@ -1,10 +1,13 @@
 # This file defines all the animation available for the Bird object.
 
 # If you need to define more that one animation for the character you just
-# put a '/' between one animation and the next.
+# say 'NEXT' between one animation and the next.
 
-# When no path, frame, row & col properties are specified for an animation,
-# by default the path, frame, row & col properties used are the last read.
+# You don't need to rewrite all the properties if the previous animation
+# has already defined that properties, they are simply override.
+
+# PAY ATTENTION: all the lines that don't begin with a character or that are empty 
+# are ignored!!!
 
 path = images/wall.png
 frame = 1
@@ -13,6 +16,12 @@ col = 1
 mirroring = no
 flipping  = no
 type = up
-/
+
+NEXT
+
 flipping = yes
 type = down
+
+NEXT
+
+# You must say 'NEXT' at the end of the file too!!!

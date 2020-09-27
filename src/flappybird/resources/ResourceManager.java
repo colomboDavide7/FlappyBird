@@ -5,6 +5,8 @@
  */
 package flappybird.resources;
 
+import flappybird.animationTool.AnimationBuilder;
+import flappybird.animationTool.AnimationToolException;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -35,7 +37,7 @@ public class ResourceManager {
 // ===========================================================================================================    
     private final String KEY_VALUE_SEPARATOR = "=";
     private final String PROPERTY_IDENT_SEPARATOR = "_";
-    private final String BETWEEN_ANIMATION_SEPARATOR = "/";
+    private final String SAY_NEXT = "NEXT";
     
     private final String DEFINITION_KEY = "definition";
     
@@ -45,7 +47,7 @@ public class ResourceManager {
     private List<ICreature> creaturePrototypes;
     private List<IPowerUp> powerUpPrototypes;
     
-    private Map<String, Map<AnimationType, IAnimation>> animations;
+    private Map<String, List<IAnimation>> animations;
     
     private boolean resourcesLoaded = false;
     
@@ -121,11 +123,27 @@ public class ResourceManager {
     }
     
     private void createCharactersAnimations(List<String> lines, String personality) throws LoadException {
-        Map<AnimationType, IAnimation> myAnimations = new HashMap<>();
+        List<IAnimation> myAnimations = new ArrayList<>();
+        IProperties myProperties = new AnimationProperties();
         
-        // TODO: read animations file and create the correct animations
+        try{
+            for(String line : lines){
+                if(line.equals(SAY_NEXT)){
+                    myAnimations.add(AnimationBuilder.build(myProperties));
+                    continue;
+                }
+                
+                String[] keyValuePair = line.split(KEY_VALUE_SEPARATOR);
+                String key = keyValuePair[0].trim();
+                String value = keyValuePair[1].trim();
+                myProperties.putProperty(key, value);
+            }
+            
+            this.animations.put(personality, myAnimations);
         
-        this.animations.put(personality, myAnimations);
+        } catch (AnimationToolException ex) {
+            throw new LoadException(ex.errorMessage());
+        }
     }
     
     private void createPrototypes() throws LoadException {
@@ -175,18 +193,6 @@ public class ResourceManager {
 }   
 
 // ===========================================================================================================
-//    private Animation tryToBuildAnimation(IProperties myProp) throws LoadException{
-//        try{
-//            String path = myProp.getPropertyByKey("path");
-//            BufferedImage spriteSheet = readImageFromFile(path);
-//            IAnimationTool builder = new AnimationBuilder();
-//            return builder.build();
-//            
-//        } catch (AnimationToolException ex) {
-//            throw new LoadException(ex.errorMessage());
-//        }
-//    }
-//    
 //    private Image tryToResizeImage(IProperties myProp) throws LoadException {
 //        try{
 //            String path = myProp.getPropertyByKey("path");
@@ -200,19 +206,5 @@ public class ResourceManager {
 //            return resizer.resize();
 //        }catch(ImageToolException ex){
 //            throw new LoadException(ex.errorMessage());
-//        }
-//    }
-//    
-//    private BufferedImage readImageFromFile(String path) throws LoadException {
-//        try{
-//            File f = new File(path);
-//            if(!f.exists())
-//                throw new FileNotFoundException();
-//            BufferedImage image = ImageIO.read(f);
-//            return image;
-//        }catch(FileNotFoundException ex){
-//            throw new LoadException(LoadException.ErrorCode.RESOURCE_NOT_FOUND, path);
-//        }catch(IOException ex){
-//            throw new LoadException(LoadException.ErrorCode.IO_ERROR, path);
 //        }
 //    }

@@ -5,7 +5,7 @@
  */
 package flappybird.resources;
 
-import java.util.Map;
+import java.util.List;
 
 /**
  *
@@ -13,7 +13,7 @@ import java.util.Map;
  */
 public class SimpleCreatureFactory {
     
-    public static ICreature createPrototype(AvailableCreature type, Map<AnimationType, IAnimation> animations){
+    public static ICreature createPrototype(AvailableCreature type, List<IAnimation> animations){
         
         ICreature prototype = null;
         switch(type){

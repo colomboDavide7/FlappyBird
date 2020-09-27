@@ -5,7 +5,7 @@
  */
 package flappybird.resources;
 
-import java.util.Map;
+import java.util.List;
 
 /**
  *
@@ -13,11 +13,11 @@ import java.util.Map;
  */
 public class Bird implements ICreature {
 
-    private Map<AnimationType, IAnimation> animations;
+    private List<IAnimation> animations;
     private float xPosition;
     private float yPosition;
     
-    public Bird(Map<AnimationType, IAnimation> animations) {
+    public Bird(List<IAnimation> animations) {
         this.animations = animations;
     }
     

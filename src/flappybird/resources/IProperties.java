@@ -9,14 +9,10 @@ package flappybird.resources;
  *
  * @author davidecolombo
  */
-public enum AnimationType {
-    right, left, up, down;
+public interface IProperties {
     
-    public static boolean isValid(String type){
-        for(AnimationType t : AnimationType.values())
-            if(type.equals(t.name()))
-                return true;
-        return false;
-    }   
+    public abstract String getPropertyByKey(String key) throws LoadException;
+    
+    public abstract void putProperty(String key, String value) throws LoadException;
     
 }

@@ -15,7 +15,8 @@ public class LoadException extends Exception {
         MULTIPLE_LOADING, IO_ERROR,
         RESOURCE_NOT_FOUND, PROPERTY_NOT_FOUND, 
         EXTERNAL_API_ERROR, BAD_DEFINITION,
-        CREATURE_NOT_FOUND, POWER_UP_NOT_FOUND;
+        CREATURE_NOT_FOUND, POWER_UP_NOT_FOUND, 
+        INVALID_PROPERTY;
     }
     
     private String errorMessage = "";
@@ -53,7 +54,7 @@ public class LoadException extends Exception {
                 return String.format("%s error code has occured.\n"
                                    + "Error with '%s' file.", 
                                      errorCode, invalidResource);
-            case PROPERTY_NOT_FOUND: 
+            case PROPERTY_NOT_FOUND:
                 return String.format("%s error code has occured.\n"
                                    + "No key property associated to '%s'.", 
                                      errorCode, invalidResource);
@@ -68,6 +69,10 @@ public class LoadException extends Exception {
             case BAD_DEFINITION: 
                 return String.format("%s error code has occured.\n"
                                    + "The type associated to '%s' doesn't exist.", 
+                                     errorCode, invalidResource);
+            case INVALID_PROPERTY:
+                return String.format("%s error code has occured.\n"
+                                   + "The property '%s' is invalid.", 
                                      errorCode, invalidResource);
         }
         return "";

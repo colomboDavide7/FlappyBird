@@ -5,7 +5,7 @@
  */
 package flappybird.resources;
 
-import java.util.Map;
+import java.util.List;
 
 /**
  *
@@ -13,11 +13,11 @@ import java.util.Map;
  */
 public class Wall implements IPowerUp {
     
-    private Map<AnimationType, IAnimation> animations;
+    private List<IAnimation> animations;
     private float xPosition;
     private float yPosition;
     
-    public Wall(Map<AnimationType, IAnimation> animations) {
+    public Wall(List<IAnimation> animations) {
         this.animations = animations;
     }
 
