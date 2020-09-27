@@ -5,6 +5,7 @@
  */
 package flappybird.resources;
 
+import flappybird.animationTool.IAnimation;
 import java.util.List;
 
 /**

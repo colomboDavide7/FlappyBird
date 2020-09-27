@@ -5,11 +5,9 @@
  */
 package flappybird.animationTool;
 
-import flappybird.resources.Animation;
-import flappybird.resources.AnimationType;
-import flappybird.resources.IAnimation;
 import flappybird.resources.IProperties;
 import flappybird.resources.LoadException;
+
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;

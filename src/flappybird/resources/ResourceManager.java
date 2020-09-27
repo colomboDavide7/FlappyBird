@@ -5,8 +5,10 @@
  */
 package flappybird.resources;
 
+import flappybird.animationTool.IAnimation;
 import flappybird.animationTool.AnimationBuilder;
 import flappybird.animationTool.AnimationToolException;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
