@@ -5,19 +5,25 @@
  */
 package flappybird.resources;
 
+import java.util.Map;
+
 /**
  *
  * @author davidecolombo
  */
-public class Wall extends PowerUp {
-
-    public Wall(Animation initA) {
-        super(initA);
+public class Wall implements IPowerUp {
+    
+    private Map<AnimationType, IAnimation> animations;
+    private float xPosition;
+    private float yPosition;
+    
+    public Wall(Map<AnimationType, IAnimation> animations) {
+        this.animations = animations;
     }
 
     @Override
-    public void powerUp(Creature creature) {
-        // Azzero la vita della creatura
+    public void powerup(ICreature creature) {
+        
     }
     
 }

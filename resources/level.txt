@@ -1,0 +1,10 @@
+# This file defines all the available level properties in the game.
+
+level_lv1 = Environment
+sheet_lv1 = images/background.jpg
+lv1_character_id1 = Bird
+lv1_character_id2 = Grub
+lv1_character_id3 = Fly
+# lv1_character_id4 = ...
+# lv1_character_id5 = ...
+lv1_graphicobj_go1 = Wall

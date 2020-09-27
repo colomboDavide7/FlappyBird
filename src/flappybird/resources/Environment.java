@@ -5,37 +5,33 @@
  */
 package flappybird.resources;
 
-import java.awt.Image;
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  *
  * @author davidecolombo
  */
-public class Environment {
+public class Environment implements IEnvironment {
     
-    private List<PowerUp> powerUps;
-    private List<Creature> enemies;
-    private Creature player;
-    private Image background;
-    
-    public Environment(Image background){
-        powerUps = new ArrayList<>();
-        this.background = background;
-    }
-    
-    public Image getBackground(){
-        return this.background;
-    }
-    
-    void setPlayer(Creature player){
-        this.player = player;
-    }
-    
-    void addBoundary(PowerUp boundary){
-        this.powerUps.add(boundary);
-    }
+//    private List<PowerUp> powerUps;
+//    private List<Creature> enemies;
+//    private Creature player;
+//    private Image background;
+//    
+//    public Environment(Image background){
+//        powerUps = new ArrayList<>();
+//        this.background = background;
+//    }
+//    
+//    public Image getBackground(){
+//        return this.background;
+//    }
+//    
+//    void setPlayer(Creature player){
+//        this.player = player;
+//    }
+//    
+//    void addBoundary(PowerUp boundary){
+//        this.powerUps.add(boundary);
+//    }
     
 //    @Override
 //    public String toString(){

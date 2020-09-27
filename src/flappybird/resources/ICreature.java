@@ -9,14 +9,6 @@ package flappybird.resources;
  *
  * @author davidecolombo
  */
-public abstract class PowerUp extends Sprite {
-    
-    protected int envID;
-    
-    public PowerUp(Animation initA) {
-        super(initA);
-    }
-    
-    public abstract void powerUp(Creature creature);
+public interface ICreature {
     
 }

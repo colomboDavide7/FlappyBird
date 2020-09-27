@@ -14,7 +14,8 @@ public class LoadException extends Exception {
     public enum ErrorCode {
         MULTIPLE_LOADING, IO_ERROR,
         RESOURCE_NOT_FOUND, PROPERTY_NOT_FOUND, 
-        EXTERNAL_API_ERROR;
+        EXTERNAL_API_ERROR, BAD_DEFINITION,
+        CREATURE_NOT_FOUND, POWER_UP_NOT_FOUND;
     }
     
     private String errorMessage = "";
@@ -55,6 +56,18 @@ public class LoadException extends Exception {
             case PROPERTY_NOT_FOUND: 
                 return String.format("%s error code has occured.\n"
                                    + "No key property associated to '%s'.", 
+                                     errorCode, invalidResource);
+            case CREATURE_NOT_FOUND: 
+                return String.format("%s error code has occured.\n"
+                                   + "No creature associated to '%s'.", 
+                                     errorCode, invalidResource);
+            case POWER_UP_NOT_FOUND:
+                return String.format("%s error code has occured.\n"
+                                   + "No power up associated to '%s'.", 
+                                     errorCode, invalidResource);
+            case BAD_DEFINITION: 
+                return String.format("%s error code has occured.\n"
+                                   + "The type associated to '%s' doesn't exist.", 
                                      errorCode, invalidResource);
         }
         return "";

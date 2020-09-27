@@ -1,0 +1,12 @@
+# This file defines all the animation available for the Bird object.
+
+# If you need to define more that one animation for the character you just
+# put a '/' between one animation and the next.
+
+path = images/bird.png
+frame = 3
+row = 1
+col = 3
+mirroring = no
+flipping  = no
+type = right

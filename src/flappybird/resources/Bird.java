@@ -5,14 +5,20 @@
  */
 package flappybird.resources;
 
+import java.util.Map;
+
 /**
  *
  * @author davidecolombo
  */
-public class Bird extends Creature {
+public class Bird implements ICreature {
 
-    public Bird(Animation initA) {
-        super(initA);
+    private Map<AnimationType, IAnimation> animations;
+    private float xPosition;
+    private float yPosition;
+    
+    public Bird(Map<AnimationType, IAnimation> animations) {
+        this.animations = animations;
     }
     
 }

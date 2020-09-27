@@ -12,7 +12,7 @@ import java.util.List;
  *
  * @author davidecolombo
  */
-public class Animation {
+public class Animation implements IAnimation {
     
     private List<Image> sprites;
     private int currentFrame = 0;
@@ -21,6 +21,7 @@ public class Animation {
         this.sprites = sprites;
     }
     
+    @Override
     public Image getFrame(){
         return sprites.get(currentFrame);
     }

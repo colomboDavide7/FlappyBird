@@ -1,6 +1,0 @@
-# Wall property file.
-
-# The lines that begin with '#' or are empty are ignored.
-
-envID = 1
-path = images/wall.png

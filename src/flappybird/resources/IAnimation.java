@@ -5,14 +5,14 @@
  */
 package flappybird.resources;
 
+import java.awt.Image;
+
 /**
  *
  * @author davidecolombo
  */
-public abstract class Creature extends Sprite {
+public interface IAnimation {
     
-    public Creature(Animation initA) {
-        super(initA);
-    }
+    public abstract Image getFrame();
     
 }

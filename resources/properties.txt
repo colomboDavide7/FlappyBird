@@ -1,14 +1,10 @@
-# This file defines the property files for each character available in the game.
+definition = bird
+definition = wall
 
-# The lines that begin with '#' or are empty are ignored.
+==============================
+# PERS_property = filename
 
-# The file are read from the current working dir (if one is given).
-# The current working dir must be setted to './resources'
+bird_animation = bird_animation.txt
+wall_animation = wall_animation.txt
 
-# filename         	   type
-
-birdProperties.txt; 	   bird
-
-wallProperties.txt;	   wall
-
-environmentProperties.txt; env
+==============================

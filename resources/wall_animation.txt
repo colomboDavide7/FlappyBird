@@ -1,0 +1,18 @@
+# This file defines all the animation available for the Bird object.
+
+# If you need to define more that one animation for the character you just
+# put a '/' between one animation and the next.
+
+# When no path, frame, row & col properties are specified for an animation,
+# by default the path, frame, row & col properties used are the last read.
+
+path = images/wall.png
+frame = 1
+row = 1
+col = 1
+mirroring = no
+flipping  = no
+type = up
+/
+flipping = yes
+type = down
