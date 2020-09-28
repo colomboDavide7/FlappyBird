@@ -14,23 +14,36 @@ import java.util.List;
  */
 public class Animation implements IAnimation {
     
+    private AnimationEngine engine;
+    
     private List<Image> sprites;
     private AnimationType type;
-    private int currentFrame = 0;
             
     public Animation(List<Image> sprites, AnimationType type){
+        this.engine = new AnimationEngine(150, sprites.size());
         this.sprites = sprites;
         this.type = type;
+        this.engine.startEngine();
     }
     
     @Override
     public Image getFrame(){
-        return sprites.get(currentFrame);
+        return sprites.get(engine.getCurrentFrameIndex());
     }
 
     @Override
-    public AnimationType getType() {
-        return this.type;
+    public boolean matchType(AnimationType type) {
+        return this.type == type;
+    }
+
+    @Override
+    public void pauseAnimation() {
+        this.engine.pauseEngine();
+    }
+
+    @Override
+    public void resumeAnimation() {
+        this.engine.resumeEngine();
     }
     
 }

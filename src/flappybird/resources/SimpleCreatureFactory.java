@@ -14,12 +14,12 @@ import java.util.List;
  */
 public class SimpleCreatureFactory {
     
-    public static ICreature createPrototype(AvailableCreature type, List<IAnimation> animations){
+    public static ICreature createPrototype(AvailableCreature personality, List<IAnimation> animations){
         
         ICreature prototype = null;
-        switch(type){
+        switch(personality){
             case bird:
-                prototype = new Bird(animations);
+                prototype = new Bird(animations, personality);
                 break;
         }
         

@@ -10,7 +10,7 @@ package flappybird.animationTool;
  * @author davidecolombo
  */
 public enum AnimationType {
-    right, left, up, down;
+    stay, fly_right, fly_left, wall_up, wall_down;
     
     public static boolean isValid(String type){
         for(AnimationType t : AnimationType.values())

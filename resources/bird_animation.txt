@@ -10,12 +10,17 @@
 # are ignored!!!
 
 path = images/bird.png
-frame = 3
+frame = 1
 row = 1
 col = 3
 mirroring = no
 flipping  = no
-type = right
+type = stay
+
+NEXT
+
+frame = 3
+type = fly_right
 
 NEXT
 

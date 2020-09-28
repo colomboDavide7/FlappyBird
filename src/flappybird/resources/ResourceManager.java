@@ -192,21 +192,15 @@ public class ResourceManager {
             throw new LoadException(LoadException.ErrorCode.MULTIPLE_LOADING, filename);
     }
     
+    public ICreature getPlayerByType(AvailableCreature type) throws LoadException {
+        for(ICreature c : this.creaturePrototypes)
+            if(c.matchPersonality(type))
+                return c;
+        throw new LoadException(LoadException.ErrorCode.CREATURE_NOT_FOUND, type.name());
+    }
+    
 }   
 
 // ===========================================================================================================
-//    private Image tryToResizeImage(IProperties myProp) throws LoadException {
-//        try{
-//            String path = myProp.getPropertyByKey("path");
-//            Image image = readImageFromFile(path);
-//            int width = Integer.parseInt(myProp.getPropertyByKey("width"));
-//            int height = Integer.parseInt(myProp.getPropertyByKey("height"));
-//            IImageTool resizer = new ImageResizer();
-//            resizer.setImageWidthInPixel(width);
-//            resizer.setImageHeightInPixel(height);
-//            resizer.setImageToEdit(image);
-//            return resizer.resize();
-//        }catch(ImageToolException ex){
-//            throw new LoadException(ex.errorMessage());
-//        }
-//    }
+
+    

@@ -15,12 +15,12 @@ row = 1
 col = 1
 mirroring = no
 flipping  = no
-type = up
+type = wall_up
 
 NEXT
 
 flipping = yes
-type = down
+type = wall_down
 
 NEXT
 

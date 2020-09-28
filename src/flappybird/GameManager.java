@@ -5,7 +5,10 @@
  */
 package flappybird;
 
+import flappybird.animationTool.AnimationType;
 import flappybird.engine.Clock;
+import flappybird.resources.AvailableCreature;
+import flappybird.resources.LoadException;
 import flappybird.resources.ResourceManager;
 import flappybird.view.Display;
 import flappybird.view.Screen;
@@ -24,7 +27,12 @@ public class GameManager implements Observer, KeyListener {
     public static void main(String[] args) {
         String propertyFile = args[0];
         
-        new GameManager().initialize(propertyFile);
+        try {
+            new GameManager().initialize(propertyFile);
+        } catch (LoadException ex) {
+            System.out.println(ex.errorMessage());
+            System.exit(1);
+        }
      
         System.out.println("exit the main");
     }
@@ -35,13 +43,14 @@ public class GameManager implements Observer, KeyListener {
     private Display disp;
     private GameBoard board;
     
-    void initialize(String propertyFile){
+    void initialize(String propertyFile) throws LoadException{
         // Resources
         this.resManager = ResourceManager.getInstance();
         this.resManager.loadResources(propertyFile);
         
         // Board
         this.board = new GameBoard();
+        this.board.setPlayer(resManager.getPlayerByType(AvailableCreature.bird));
         
         // Screen
         this.frame = new Screen();
@@ -72,6 +81,7 @@ public class GameManager implements Observer, KeyListener {
         
     }
 
+    // Updating player's animation
     @Override
     public void keyTyped(KeyEvent e) {
         // not relevant
@@ -82,7 +92,7 @@ public class GameManager implements Observer, KeyListener {
         switch(e.getKeyCode()){
                 
             case KeyEvent.VK_SPACE:
-                
+                board.update(AnimationType.fly_right);
                 break;
         }
     }
@@ -92,7 +102,7 @@ public class GameManager implements Observer, KeyListener {
         switch(e.getKeyCode()){
                 
             case KeyEvent.VK_SPACE:
-                
+                board.update(AnimationType.stay);
                 break;
         }
     }

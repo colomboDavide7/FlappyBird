@@ -15,6 +15,10 @@ public interface IAnimation {
     
     public abstract Image getFrame();
     
-    public abstract AnimationType getType();
+    public abstract boolean matchType(AnimationType type);
+    
+    public abstract void pauseAnimation();
+    
+    public abstract void resumeAnimation();
     
 }
