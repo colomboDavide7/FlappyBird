@@ -3,20 +3,20 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package flappybird.animationTool;
+package flappybird.resources;
 
 /**
  *
  * @author davidecolombo
  */
-public enum AnimationType {
-    stay, fly_right, fly_left, wall_up, wall_down;
+public enum AvailableEnvironment {
+    easy, medium, hard;
     
-    public static boolean isValid(String type){
-        for(AnimationType t : AnimationType.values())
-            if(type.equals(t.name()))
+    public static boolean isAvailable(String value) {
+        for(AvailableEnvironment e : AvailableEnvironment.values())
+            if(value.equals(e.name()))
                 return true;
         return false;
-    }   
+    }
     
 }

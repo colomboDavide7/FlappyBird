@@ -5,7 +5,7 @@
  */
 package flappybird;
 
-import flappybird.animationTool.AnimationType;
+import flappybird.resources.AnimationType;
 import flappybird.resources.ICreature;
 import flappybird.view.Display;
 import java.awt.Graphics;

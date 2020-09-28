@@ -19,7 +19,7 @@ public class SimplePowerUpFactory {
         
         switch(type){
             case wall:
-                prototype = new Wall(animations);
+                prototype = new Wall(animations, type);
                 break;
         }
         

@@ -5,10 +5,18 @@
  */
 package flappybird.resources;
 
+import java.awt.Graphics;
+
 /**
  *
  * @author davidecolombo
  */
 public interface IEnvironment {
+    
+    public abstract boolean matchID(int id);
+    
+    public abstract void update();
+    
+    public abstract void draw(Graphics g);
     
 }

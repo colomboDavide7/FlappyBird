@@ -10,7 +10,7 @@ package flappybird.resources;
  * @author davidecolombo
  */
 public enum AvailableProperties {
-    animation;
+    animation, config;
     
     public static boolean isValid(String myProp) throws LoadException {
         for(AvailableProperties prop : AvailableProperties.values())

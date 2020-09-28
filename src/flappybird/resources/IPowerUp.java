@@ -5,12 +5,20 @@
  */
 package flappybird.resources;
 
+import java.awt.Graphics;
+
 /**
  *
  * @author davidecolombo
  */
 public interface IPowerUp {
     
-    public void powerup(ICreature creature);
+    public abstract void powerup(ICreature creature);
+    
+    public abstract boolean matchType(AvailablePowerUp type);
+    
+    public abstract void draw(Graphics g);
+    
+    public abstract void update();
     
 }

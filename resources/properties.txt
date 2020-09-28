@@ -1,10 +1,12 @@
 definition = bird
 definition = wall
+definition = easy
 
 ==============================
 # PERS_property = filename
 
 bird_animation = bird_animation.txt
 wall_animation = wall_animation.txt
+easy_config    = easy_config.txt
 
 ==============================

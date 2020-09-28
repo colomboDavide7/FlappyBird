@@ -45,11 +45,14 @@ public class ResourceManager {
     
     private List<AvailableCreature> availableCreatures;
     private List<AvailablePowerUp> availablePowerUp;
+    private List<AvailableEnvironment> availableLevels;
     
     private List<ICreature> creaturePrototypes;
     private List<IPowerUp> powerUpPrototypes;
+    private List<IEnvironment> levelPrototypes;
     
     private Map<String, List<IAnimation>> animations;
+    private Map<String, IProperties> levelProperties;
     
     private boolean resourcesLoaded = false;
     
@@ -64,6 +67,9 @@ public class ResourceManager {
             
             // Creating
             createPrototypes();
+            
+            // Environment
+            createEnvironmentPrototypes();
             
             // Done
             resourcesLoaded = true;
@@ -82,9 +88,12 @@ public class ResourceManager {
     private void initObjects(){
         this.availableCreatures  = new ArrayList<>();
         this.availablePowerUp    = new ArrayList<>();
+        this.availableLevels     = new ArrayList<>();
         this.animations          = new HashMap<>();
         this.creaturePrototypes  = new ArrayList<>();
         this.powerUpPrototypes   = new ArrayList<>();
+        this.levelPrototypes     = new ArrayList<>();
+        this.levelProperties     = new HashMap<>();
     }
     
     private void parseFile(List<String> lines) throws LoadException{
@@ -96,7 +105,7 @@ public class ResourceManager {
         String[] keyValuePair = line.split(KEY_VALUE_SEPARATOR);
         String key   = keyValuePair[0].trim();
         String value = keyValuePair[1].trim();
-
+        
         if(key.equals(DEFINITION_KEY))
             parseDefinition(value);
         else
@@ -108,6 +117,8 @@ public class ResourceManager {
             this.availableCreatures.add(AvailableCreature.valueOf(value));
         else if(AvailablePowerUp.isAvailable(value))
             this.availablePowerUp.add(AvailablePowerUp.valueOf(value));
+        else if(AvailableEnvironment.isAvailable(value))
+            this.availableLevels.add(AvailableEnvironment.valueOf(value));
         else
             throw new LoadException(LoadException.ErrorCode.BAD_DEFINITION, value);
     }
@@ -121,7 +132,13 @@ public class ResourceManager {
         if(property.equals(AvailableProperties.animation.name())){
             lines = openAndReadTextFile(value);
             createCharactersAnimations(lines, pers);
+        }else if(property.equals(AvailableProperties.config.name())){
+            lines = openAndReadTextFile(value);
+            createEnvironmentProperties(lines, pers);
+        }else{
+            throw new LoadException(LoadException.ErrorCode.PROPERTY_NOT_FOUND, property);
         }
+            
     }
     
     private void createCharactersAnimations(List<String> lines, String personality) throws LoadException {
@@ -150,7 +167,6 @@ public class ResourceManager {
     
     private void createPrototypes() throws LoadException {
         Set<String> keyset = animations.keySet();
-        
         for(String pers : keyset)
             if(AvailableCreature.isAvailable(pers))
                 this.creaturePrototypes.add(SimpleCreatureFactory.createPrototype(
@@ -162,6 +178,31 @@ public class ResourceManager {
                                             ));
             else
                 throw new LoadException(LoadException.ErrorCode.BAD_DEFINITION, pers);
+    }
+    
+    private void createEnvironmentProperties(List<String> lines, String pers) throws LoadException {
+        IProperties myProp = new EnvironmentProperties();
+        
+        for(String line : lines){
+            if(line.equals(SAY_NEXT)){
+                levelProperties.put(pers, myProp);
+                continue;
+            }
+            
+            String[] keyValuePair = line.split(KEY_VALUE_SEPARATOR);
+            String key = keyValuePair[0].trim();
+            String value = keyValuePair[1].trim();
+            myProp.putProperty(key, value);
+        }
+    }
+    
+    private void createEnvironmentPrototypes() throws LoadException {
+        Set<String> keyset = levelProperties.keySet();
+        
+        for(String pers : keyset)
+            levelPrototypes.add(EnvironmentBuilder.build(
+                    levelProperties.get(pers), powerUpPrototypes)
+            );
     }
     
 // ===========================================================================================================
@@ -192,6 +233,7 @@ public class ResourceManager {
             throw new LoadException(LoadException.ErrorCode.MULTIPLE_LOADING, filename);
     }
     
+// ===========================================================================================================
     public ICreature getPlayerByType(AvailableCreature type) throws LoadException {
         for(ICreature c : this.creaturePrototypes)
             if(c.matchPersonality(type))
@@ -199,7 +241,7 @@ public class ResourceManager {
         throw new LoadException(LoadException.ErrorCode.CREATURE_NOT_FOUND, type.name());
     }
     
-}   
+}
 
 // ===========================================================================================================
 

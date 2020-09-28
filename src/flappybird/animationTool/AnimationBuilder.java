@@ -5,6 +5,7 @@
  */
 package flappybird.animationTool;
 
+import flappybird.resources.AnimationType;
 import flappybird.resources.IProperties;
 import flappybird.resources.LoadException;
 

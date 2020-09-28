@@ -5,37 +5,43 @@
  */
 package flappybird.resources;
 
+import java.awt.Graphics;
+import java.awt.Image;
+import java.util.List;
+
 /**
  *
  * @author davidecolombo
  */
 public class Environment implements IEnvironment {
     
-//    private List<PowerUp> powerUps;
-//    private List<Creature> enemies;
-//    private Creature player;
-//    private Image background;
-//    
-//    public Environment(Image background){
-//        powerUps = new ArrayList<>();
-//        this.background = background;
-//    }
-//    
-//    public Image getBackground(){
-//        return this.background;
-//    }
-//    
-//    void setPlayer(Creature player){
-//        this.player = player;
-//    }
-//    
-//    void addBoundary(PowerUp boundary){
-//        this.powerUps.add(boundary);
-//    }
+    private int myID;
+    private Image background;
+    private List<IPowerUp> powerUps;
     
-//    @Override
-//    public String toString(){
-//        return properties.toString();
-//    }
+    public Environment(List<IPowerUp> powerUps, Image background, int id){
+        this.powerUps = powerUps;
+        this.background = background;
+        this.myID = id;
+    }
+
+    @Override
+    public void draw(Graphics g) {
+        g.drawImage(this.background, 0, 0, null);
+        
+        for(IPowerUp p : powerUps)
+            p.draw(g);
+    }
+
+    @Override
+    public void update() {
+        for(IPowerUp p : powerUps)
+            p.update();
+    }
+
+    @Override
+    public boolean matchID(int id) {
+        return myID == id;
+    }
     
 }

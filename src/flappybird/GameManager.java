@@ -5,7 +5,7 @@
  */
 package flappybird;
 
-import flappybird.animationTool.AnimationType;
+import flappybird.resources.AnimationType;
 import flappybird.engine.Clock;
 import flappybird.resources.AvailableCreature;
 import flappybird.resources.LoadException;
