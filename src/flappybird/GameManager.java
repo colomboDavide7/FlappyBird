@@ -8,6 +8,9 @@ package flappybird;
 import flappybird.resources.AnimationType;
 import flappybird.engine.Clock;
 import flappybird.resources.AvailableCreature;
+import flappybird.resources.AvailableEnvironment;
+import flappybird.resources.ICreature;
+import flappybird.resources.IEnvironment;
 import flappybird.resources.LoadException;
 import flappybird.resources.ResourceManager;
 import flappybird.view.Display;
@@ -48,12 +51,19 @@ public class GameManager implements Observer, KeyListener {
         this.resManager = ResourceManager.getInstance();
         this.resManager.loadResources(propertyFile);
         
+        IEnvironment currentEnvironment = resManager.getLevel(AvailableEnvironment.easy);
+        int widthInPixel = currentEnvironment.getBackgroundImage().getWidth(null);
+        int heightInPixel = currentEnvironment.getBackgroundImage().getHeight(null);
+        ICreature currentPlayer = resManager.getPlayerByType(AvailableCreature.bird);
+        currentPlayer.setLocation(widthInPixel / 2, heightInPixel / 2);
+        
         // Board
         this.board = new GameBoard();
-        this.board.setPlayer(resManager.getPlayerByType(AvailableCreature.bird));
+        this.board.setPlayer(currentPlayer);
+        this.board.setEnvironment(currentEnvironment);
         
         // Screen
-        this.frame = new Screen();
+        this.frame = new Screen(widthInPixel, heightInPixel);
         this.disp  = frame.getDisplay();
         
         // Display

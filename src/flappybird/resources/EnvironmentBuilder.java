@@ -23,13 +23,13 @@ public class EnvironmentBuilder {
     private static List<ICreature> creatureRequested = new ArrayList<>();
     private static List<IPowerUp> powerUpRequested = new ArrayList<>();
     
-    static IEnvironment build(IProperties myProp, List<IPowerUp> powerUp) throws LoadException {
+    static IEnvironment build(IProperties myProp, List<IPowerUp> powerUp, String pers) throws LoadException {
         String path = myProp.getPropertyByKey("path");
         BufferedImage bck = tryToReadImage(path);
-        int myID = Integer.parseInt(myProp.getPropertyByKey("id"));        
+        AvailableEnvironment type = AvailableEnvironment.valueOf(pers);
         selectPowerUpPrototypes(myProp, powerUp);
         
-        return new Environment(powerUpRequested, bck, myID);
+        return new Environment(powerUpRequested, bck, type);
     }
     
     private static BufferedImage tryToReadImage(String path) throws LoadException {

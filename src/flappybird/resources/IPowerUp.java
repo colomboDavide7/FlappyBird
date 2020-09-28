@@ -16,7 +16,7 @@ public interface IPowerUp {
     public abstract void powerup(ICreature creature);
     
     public abstract boolean matchType(AvailablePowerUp type);
-    
+        
     public abstract void draw(Graphics g);
     
     public abstract void update();

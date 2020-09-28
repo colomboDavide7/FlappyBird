@@ -10,7 +10,6 @@
 # are ignored!!!
 
 path = images/background.jpg
-id = 1
 powerup_1 = wall
 # powerup_2 = rock
 # creature_1 = tiger

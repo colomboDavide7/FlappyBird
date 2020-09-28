@@ -6,7 +6,6 @@
 package flappybird.view;
 
 import java.awt.Color;
-import java.awt.event.KeyListener;
 import javax.swing.JFrame;
 
 /**
@@ -17,8 +16,8 @@ public class Screen extends JFrame {
     
     private Display display;
     
-    public Screen(){
-        initializeScreen();
+    public Screen(int w, int h){
+        initializeScreen(w, h);
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -30,8 +29,8 @@ public class Screen extends JFrame {
         });
     }
     
-    private void initializeScreen(){
-        this.display = new Display();
+    private void initializeScreen(int w, int h){
+        this.display = new Display(w, h);
         
         this.setBackground(Color.BLACK);
         this.getContentPane().add(this.display);

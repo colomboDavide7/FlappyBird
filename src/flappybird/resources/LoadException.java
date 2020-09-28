@@ -16,7 +16,7 @@ public class LoadException extends Exception {
         RESOURCE_NOT_FOUND, PROPERTY_NOT_FOUND, 
         EXTERNAL_API_ERROR, BAD_DEFINITION,
         CREATURE_NOT_FOUND, POWER_UP_NOT_FOUND, 
-        INVALID_PROPERTY;
+        INVALID_PROPERTY, ENVIRONMENT_NOT_FOUND;
     }
     
     private String errorMessage = "";
@@ -65,6 +65,10 @@ public class LoadException extends Exception {
             case POWER_UP_NOT_FOUND:
                 return String.format("%s error code has occured.\n"
                                    + "No power up associated to '%s'.", 
+                                     errorCode, invalidResource);
+            case ENVIRONMENT_NOT_FOUND:
+                return String.format("%s error code has occured.\n"
+                                   + "No environment associated to '%s'.", 
                                      errorCode, invalidResource);
             case BAD_DEFINITION: 
                 return String.format("%s error code has occured.\n"

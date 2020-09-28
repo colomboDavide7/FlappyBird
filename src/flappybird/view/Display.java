@@ -18,17 +18,17 @@ public class Display extends JPanel {
     
     private GameBoard board;
             
-    public Display(){
-        initDisplay();
+    public Display(int w, int h){
+        initDisplay(w, h);
     }
     
-    private void initDisplay(){
+    private void initDisplay(int w, int h){
         setLayout(null);
         setName("");
         setOpaque(false);
-        setMinimumSize(new Dimension(500, 500));
-        setPreferredSize(new Dimension(500, 500));
-        setMaximumSize(new Dimension(500, 500));
+        setMinimumSize(new Dimension(w, h));
+        setPreferredSize(new Dimension(w, h));
+        setMaximumSize(new Dimension(w, h));
     }
     
     public void setBoard(GameBoard board){

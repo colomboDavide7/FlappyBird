@@ -15,7 +15,7 @@ import java.util.Map;
 public class EnvironmentProperties implements IProperties {
 
     public enum ValidProperties{
-        path, id, powerup_, creature_;
+        path, powerup_, creature_;
     }
     
     public static boolean isValid(String property){

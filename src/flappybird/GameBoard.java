@@ -7,6 +7,7 @@ package flappybird;
 
 import flappybird.resources.AnimationType;
 import flappybird.resources.ICreature;
+import flappybird.resources.IEnvironment;
 import flappybird.view.Display;
 import java.awt.Graphics;
 
@@ -18,9 +19,14 @@ public class GameBoard {
     
     private Display disp;
     private ICreature player;
+    private IEnvironment environment;
     
     void setPlayer(ICreature player){
         this.player = player;
+    }
+    
+    void setEnvironment(IEnvironment env){
+        this.environment = env;
     }
     
     void setDisplay(Display disp){
@@ -41,9 +47,8 @@ public class GameBoard {
     }
     
     public void drawBoard(Graphics g){
-        // TODO: draw environment
-        
-        player.draw(g);
+        this.environment.draw(g);
+        this.player.draw(g);
     }
     
     

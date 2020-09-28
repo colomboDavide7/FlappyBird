@@ -6,6 +6,7 @@
 package flappybird.resources;
 
 import java.awt.Graphics;
+import java.awt.Image;
 
 /**
  *
@@ -13,10 +14,12 @@ import java.awt.Graphics;
  */
 public interface IEnvironment {
     
-    public abstract boolean matchID(int id);
+    public abstract boolean matchType(AvailableEnvironment type);
     
     public abstract void update();
     
     public abstract void draw(Graphics g);
+    
+    public abstract Image getBackgroundImage();
     
 }

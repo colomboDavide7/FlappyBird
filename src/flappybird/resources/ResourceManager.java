@@ -201,7 +201,7 @@ public class ResourceManager {
         
         for(String pers : keyset)
             levelPrototypes.add(EnvironmentBuilder.build(
-                    levelProperties.get(pers), powerUpPrototypes)
+                    levelProperties.get(pers), powerUpPrototypes, pers)
             );
     }
     
@@ -239,6 +239,13 @@ public class ResourceManager {
             if(c.matchPersonality(type))
                 return c;
         throw new LoadException(LoadException.ErrorCode.CREATURE_NOT_FOUND, type.name());
+    }
+    
+    public IEnvironment getLevel(AvailableEnvironment type) throws LoadException {
+        for(IEnvironment e : this.levelPrototypes)
+            if(e.matchType(type))
+                return e;
+        throw new LoadException(LoadException.ErrorCode.ENVIRONMENT_NOT_FOUND, type.name());
     }
     
 }

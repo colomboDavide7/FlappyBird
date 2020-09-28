@@ -13,10 +13,14 @@ import java.awt.Graphics;
  */
 public interface ICreature {
     
+    public abstract void setLocation(int xPos, int yPos);
+    
     public abstract boolean matchPersonality(AvailableCreature pers);
     
     public abstract void updateAnimation(AnimationType type);
     
     public abstract void draw(Graphics g);
+    
+    public abstract void update();
     
 }

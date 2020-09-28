@@ -15,14 +15,14 @@ import java.util.List;
  */
 public class Environment implements IEnvironment {
     
-    private int myID;
+    private AvailableEnvironment type;
     private Image background;
     private List<IPowerUp> powerUps;
     
-    public Environment(List<IPowerUp> powerUps, Image background, int id){
+    public Environment(List<IPowerUp> powerUps, Image background, AvailableEnvironment type){
         this.powerUps = powerUps;
         this.background = background;
-        this.myID = id;
+        this.type = type;
     }
 
     @Override
@@ -40,8 +40,13 @@ public class Environment implements IEnvironment {
     }
 
     @Override
-    public boolean matchID(int id) {
-        return myID == id;
+    public boolean matchType(AvailableEnvironment type) {
+        return this.type == type;
+    }
+
+    @Override
+    public Image getBackgroundImage() {
+        return this.background;
     }
     
 }
