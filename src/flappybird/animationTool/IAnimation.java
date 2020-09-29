@@ -6,7 +6,7 @@
 package flappybird.animationTool;
 
 import flappybird.resources.AnimationType;
-import java.awt.Image;
+import java.awt.image.BufferedImage;
 
 /**
  *
@@ -14,12 +14,14 @@ import java.awt.Image;
  */
 public interface IAnimation {
     
-    public abstract Image getFrame();
+    public abstract IAnimation clone();
+    
+    public abstract BufferedImage getFrame();
     
     public abstract boolean matchType(AnimationType type);
     
     public abstract void pauseAnimation();
     
     public abstract void resumeAnimation();
-    
+        
 }

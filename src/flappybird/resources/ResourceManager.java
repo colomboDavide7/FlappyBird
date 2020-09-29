@@ -200,9 +200,12 @@ public class ResourceManager {
         Set<String> keyset = levelProperties.keySet();
         
         for(String pers : keyset)
-            levelPrototypes.add(EnvironmentBuilder.build(
-                    levelProperties.get(pers), powerUpPrototypes, pers)
-            );
+            if(AvailableEnvironment.isAvailable(pers))
+                levelPrototypes.add(EnvironmentBuilder.build(
+                        levelProperties.get(pers), powerUpPrototypes, AvailableEnvironment.valueOf(pers))
+                );
+            else
+                throw new LoadException(LoadException.ErrorCode.BAD_DEFINITION, pers);
     }
     
 // ===========================================================================================================

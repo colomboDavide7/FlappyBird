@@ -42,8 +42,12 @@ public class GameBoard {
         });
     }
     
-    void update(AnimationType type){
+    void updatePlayer(AnimationType type){
         player.updateAnimation(type);
+    }
+    
+    void updateEnvironment(){
+        this.environment.update();
     }
     
     public void drawBoard(Graphics g){

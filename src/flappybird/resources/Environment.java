@@ -17,26 +17,26 @@ public class Environment implements IEnvironment {
     
     private AvailableEnvironment type;
     private Image background;
-    private List<IPowerUp> powerUps;
-    
-    public Environment(List<IPowerUp> powerUps, Image background, AvailableEnvironment type){
-        this.powerUps = powerUps;
+    private List<IPowerUp> powerUp;
+          
+    public Environment(List<IPowerUp> powerUp, Image background, AvailableEnvironment type){
         this.background = background;
         this.type = type;
+        this.powerUp = powerUp;
     }
-
+    
     @Override
     public void draw(Graphics g) {
         g.drawImage(this.background, 0, 0, null);
         
-        for(IPowerUp p : powerUps)
+        for(IPowerUp p : powerUp)
             p.draw(g);
     }
 
     @Override
     public void update() {
-        for(IPowerUp p : powerUps)
-            p.update();
+        for(IPowerUp p : powerUp)
+            p.update(this.background.getWidth(null));
     }
 
     @Override

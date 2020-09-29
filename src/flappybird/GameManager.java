@@ -86,9 +86,9 @@ public class GameManager implements Observer, KeyListener {
         EventObject evt = (EventObject) arg; 
         
         if(evt instanceof Clock.TimerTickEvent){
+            this.board.updateEnvironment();
             this.board.timerTick();
         }
-        
     }
 
     // Updating player's animation
@@ -102,7 +102,7 @@ public class GameManager implements Observer, KeyListener {
         switch(e.getKeyCode()){
                 
             case KeyEvent.VK_SPACE:
-                board.update(AnimationType.fly_right);
+                board.updatePlayer(AnimationType.fly_right);
                 break;
         }
     }
@@ -112,7 +112,7 @@ public class GameManager implements Observer, KeyListener {
         switch(e.getKeyCode()){
                 
             case KeyEvent.VK_SPACE:
-                board.update(AnimationType.stay);
+                board.updatePlayer(AnimationType.stay);
                 break;
         }
     }

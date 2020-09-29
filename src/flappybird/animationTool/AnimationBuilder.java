@@ -27,7 +27,7 @@ public class AnimationBuilder {
         try {
             String path = prop.getPropertyByKey("path");
             BufferedImage sheet = tryToReadImage(path);
-            List<Image> sprites = getSpriteListFromProperty(prop, sheet);
+            List<BufferedImage> sprites = getSpriteListFromProperty(prop, sheet);
             AnimationType type = getTypeFromProperty(prop);
             
             return new Animation(sprites, type);
@@ -57,12 +57,12 @@ public class AnimationBuilder {
         }
     }
     
-    private static List<Image> getSpriteListFromProperty(IProperties prop, BufferedImage sheet) throws AnimationToolException {
+    private static List<BufferedImage> getSpriteListFromProperty(IProperties prop, BufferedImage sheet) throws AnimationToolException {
         try{
             int upperLeftX = 0;
             int upperLeftY = 0;
             int frame = Integer.parseInt(prop.getPropertyByKey("frame"));
-            List<Image> sprites = new ArrayList<>(frame);
+            List<BufferedImage> sprites = new ArrayList<>(frame);
             int col   = Integer.parseInt(prop.getPropertyByKey("col"));
             int row   = Integer.parseInt(prop.getPropertyByKey("row"));
             int spriteWidth = sheet.getWidth() / col;

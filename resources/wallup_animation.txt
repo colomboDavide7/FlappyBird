@@ -9,18 +9,14 @@
 # PAY ATTENTION: all the lines that don't begin with a character or that are empty 
 # are ignored!!!
 
-path = images/background.jpg
-powerup_1 = wallup
-powerup_2 = walldown
-hSpaceBetween = 160
-nWall = 3
-slotHeight = 96
-centerToUpperLineOffset = 48
+path = images/wall_up.png
+frame = 1
+row = 1
+col = 1
+mirroring = no
+flipping  = no
+type = wall_up
 
 NEXT
 
-===========================
-# EXAMPLES: 
-# powerup_2 = rock
-# creature_1 = tiger
-# creature_2 = lion
+# You must say 'NEXT' at the end of the file too!!!

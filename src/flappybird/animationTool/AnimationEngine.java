@@ -5,9 +5,6 @@
  */
 package flappybird.animationTool;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 /**
  *
  * @author davidecolombo
@@ -59,15 +56,7 @@ class AnimationEngine extends Thread {
         currentFrame = (currentFrame + 1) % numberOfFrames;
     }
     
-    synchronized int getCurrentFrameIndex(){
-        while(monitor.isPaused()){
-            try {
-                this.wait();
-            } catch (InterruptedException ex) {
-                // do nothing
-            }
-        }
-        
+    synchronized int getCurrentFrameIndex(){        
         return this.currentFrame;
     }
     

@@ -18,7 +18,11 @@ public class SimplePowerUpFactory {
         IPowerUp prototype = null;
         
         switch(type){
-            case wall:
+            case wallup:
+                prototype = new Wall(animations, type);
+                break;
+                
+            case walldown:
                 prototype = new Wall(animations, type);
                 break;
         }

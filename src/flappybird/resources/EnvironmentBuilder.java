@@ -20,14 +20,24 @@ public class EnvironmentBuilder {
     
     private static final int MAX_NUMBER_OF_OBJECTS = 10;
     
-    private static List<ICreature> creatureRequested = new ArrayList<>();
+    private static List<ICreature> creaturePrototypes = new ArrayList<>();
+    private static List<IPowerUp> powerUpPrototypes = new ArrayList<>();
     private static List<IPowerUp> powerUpRequested = new ArrayList<>();
+    private static int hSpaceBetween;
+    private static int slotHeight;
+    private static int upperLineOffset;
+    private static int nWall;
     
-    static IEnvironment build(IProperties myProp, List<IPowerUp> powerUp, String pers) throws LoadException {
+    static IEnvironment build(IProperties myProp, List<IPowerUp> powerUp, AvailableEnvironment type) throws LoadException {
         String path = myProp.getPropertyByKey("path");
         BufferedImage bck = tryToReadImage(path);
-        AvailableEnvironment type = AvailableEnvironment.valueOf(pers);
         selectPowerUpPrototypes(myProp, powerUp);
+        
+        hSpaceBetween = Integer.parseInt(myProp.getPropertyByKey("hSpaceBetween"));
+        slotHeight = Integer.parseInt(myProp.getPropertyByKey("slotHeight"));
+        upperLineOffset = Integer.parseInt(myProp.getPropertyByKey("centerToUpperLineOffset"));
+        nWall = Integer.parseInt(myProp.getPropertyByKey("nWall"));
+        setupAllObjects(bck);
         
         return new Environment(powerUpRequested, bck, type);
     }
@@ -69,10 +79,57 @@ public class EnvironmentBuilder {
         
         for(IPowerUp p : powerUp)
             if(p.matchType(type)){
-                powerUpRequested.add(p);
+                powerUpPrototypes.add(p);
                 return;
             }
        throw new Exception(prototype);
+    }
+    
+    private static void setupAllObjects(BufferedImage bck) throws LoadException {
+        
+        setupPowerUps(bck);
+    }
+    
+    private static void setupPowerUps(BufferedImage bck) throws LoadException{
+        
+        for(IPowerUp p : powerUpPrototypes)
+            if(p.matchType(AvailablePowerUp.wallup))
+                setupUpperWall(bck, p);
+            else if(p.matchType(AvailablePowerUp.walldown))
+                setupDownWall(bck, p);
+    }
+    
+    private static void setupUpperWall(BufferedImage bck, IPowerUp wall) throws LoadException {
+        
+        int totalHeight = bck.getHeight() / 2 - upperLineOffset;
+        int initialY;
+        int upperLeftX = 0;
+        
+        for(int i = 0; i < nWall; i++){
+            IPowerUp clone = wall.clone();
+            clone.setInitialLocation(upperLeftX, 0);
+            initialY = wall.getCurrentFrame().getHeight(null) - totalHeight;
+            clone.setRectPositionToDrawSubImage(0, initialY, wall.getCurrentFrame().getWidth(null), totalHeight
+            );
+            powerUpRequested.add(clone);
+            upperLeftX += wall.getCurrentFrame().getWidth(null) + hSpaceBetween;
+        }
+    }
+    
+    private static void setupDownWall(BufferedImage bck, IPowerUp wall) throws LoadException {
+        int totalHeight = bck.getHeight() / 2 - upperLineOffset;
+        int upperLeftX = 0;
+        
+        for(int i = 0; i < nWall; i++){
+            IPowerUp clone = wall.clone();
+            clone.setInitialLocation(upperLeftX, totalHeight + slotHeight);
+            clone.setRectPositionToDrawSubImage(
+                    0, 0, wall.getCurrentFrame().getWidth(null), totalHeight
+            );
+            
+            powerUpRequested.add(clone);
+            upperLeftX += wall.getCurrentFrame().getWidth(null) + hSpaceBetween;
+        }
     }
     
     private static void selectCreaturePrototypes(IProperties myProp, List<ICreature> creatures){

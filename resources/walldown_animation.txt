@@ -9,19 +9,12 @@
 # PAY ATTENTION: all the lines that don't begin with a character or that are empty 
 # are ignored!!!
 
-path = images/wall.png
+path = images/wall_down.png
 frame = 1
 row = 1
 col = 1
 mirroring = no
 flipping  = no
-type = wall_up
-
-NEXT
-
-flipping = yes
 type = wall_down
 
 NEXT
-
-# You must say 'NEXT' at the end of the file too!!!

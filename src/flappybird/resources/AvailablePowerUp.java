@@ -10,7 +10,7 @@ package flappybird.resources;
  * @author davidecolombo
  */
 public enum AvailablePowerUp {
-    wall;
+    wallup, walldown;
     
     public static boolean isAvailable(String pers){
         for(AvailablePowerUp val : AvailablePowerUp.values())
