@@ -6,8 +6,9 @@
 package flappybird;
 
 import flappybird.resources.AnimationType;
-import flappybird.resources.ICreature;
-import flappybird.resources.IEnvironment;
+import flappybird.resources.IPlayer;
+import flappybird.resources.IRenderable;
+import flappybird.resources.IUpdatable;
 import flappybird.view.Display;
 import java.awt.Graphics;
 
@@ -18,15 +19,21 @@ import java.awt.Graphics;
 public class GameBoard {
     
     private Display disp;
-    private ICreature player;
-    private IEnvironment environment;
+    private IPlayer animatedPlayer;
+    private IUpdatable player;
+    private IRenderable renderablePlayer;
+    private IUpdatable environment;
+    private IRenderable renderableEnvironment;
     
-    void setPlayer(ICreature player){
+    void setPlayer(IUpdatable player){
         this.player = player;
+        this.renderablePlayer = (IRenderable) player;
+        this.animatedPlayer = (IPlayer) player;
     }
     
-    void setEnvironment(IEnvironment env){
+    void setEnvironment(IUpdatable env){
         this.environment = env;
+        this.renderableEnvironment = (IRenderable) env;
     }
     
     void setDisplay(Display disp){
@@ -43,18 +50,25 @@ public class GameBoard {
     }
     
     void updatePlayer(AnimationType type){
-        player.updateAnimation(type);
+        animatedPlayer.updateAnimation(type);
+    }
+    
+    void jump(){
+        this.animatedPlayer.jump();
+    }
+    
+    void fall(){
+        this.animatedPlayer.fall();
     }
     
     void updateEnvironment(){
         this.environment.update();
+        this.player.update();
     }
     
     public void drawBoard(Graphics g){
-        this.environment.draw(g);
-        this.player.draw(g);
+        this.renderableEnvironment.draw(g);
+        this.renderablePlayer.draw(g);
     }
-    
-    
     
 }

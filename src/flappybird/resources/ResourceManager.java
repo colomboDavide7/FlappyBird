@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -42,17 +43,13 @@ public class ResourceManager {
     private final String SAY_NEXT = "NEXT";
     
     private final String DEFINITION_KEY = "definition";
-    
-    private List<AvailableCreature> availableCreatures;
-    private List<AvailablePowerUp> availablePowerUp;
-    private List<AvailableEnvironment> availableLevels;
-    
-    private List<ICreature> creaturePrototypes;
-    private List<IPowerUp> powerUpPrototypes;
-    private List<IEnvironment> levelPrototypes;
+
+    private List<IAvailable> personality;
+    private List<ICloneable> prototypes;
+    private List<IUpdatable> levelPrototypes;
     
     private Map<String, List<IAnimation>> animations;
-    private Map<String, IProperties> levelProperties;
+    private Map<String, List<IProperties>> properties;
     
     private boolean resourcesLoaded = false;
     
@@ -86,14 +83,11 @@ public class ResourceManager {
     }
     
     private void initObjects(){
-        this.availableCreatures  = new ArrayList<>();
-        this.availablePowerUp    = new ArrayList<>();
-        this.availableLevels     = new ArrayList<>();
-        this.animations          = new HashMap<>();
-        this.creaturePrototypes  = new ArrayList<>();
-        this.powerUpPrototypes   = new ArrayList<>();
-        this.levelPrototypes     = new ArrayList<>();
-        this.levelProperties     = new HashMap<>();
+        this.personality = new ArrayList<>();
+        this.prototypes  = new ArrayList<>();
+        this.levelPrototypes = new ArrayList<>();
+        this.properties = new HashMap<>();
+        this.animations = new HashMap<>();
     }
     
     private void parseFile(List<String> lines) throws LoadException{
@@ -113,12 +107,10 @@ public class ResourceManager {
     }
     
     private void parseDefinition(String value) throws LoadException {
-        if(AvailableCreature.isAvailable(value))
-            this.availableCreatures.add(AvailableCreature.valueOf(value));
-        else if(AvailablePowerUp.isAvailable(value))
-            this.availablePowerUp.add(AvailablePowerUp.valueOf(value));
-        else if(AvailableEnvironment.isAvailable(value))
-            this.availableLevels.add(AvailableEnvironment.valueOf(value));
+        if(AvailablePrototypes.isAvailable(value))
+            personality.add(new AvailablePrototypes(value));
+        else if (AvailableEnvironment.isAvailable(value))
+            personality.add(new AvailableEnvironment(value));
         else
             throw new LoadException(LoadException.ErrorCode.BAD_DEFINITION, value);
     }
@@ -127,18 +119,17 @@ public class ResourceManager {
         String[] persPropertyPair = key.split(PROPERTY_IDENT_SEPARATOR);
         String pers     = persPropertyPair[0].trim();
         String property = persPropertyPair[1].trim();
-        List<String> lines;
         
-        if(property.equals(AvailableProperties.animation.name())){
-            lines = openAndReadTextFile(value);
+        List<String> lines = openAndReadTextFile(value);
+        
+        if(property.equals(AvailableProperties.animation.name()))
             createCharactersAnimations(lines, pers);
-        }else if(property.equals(AvailableProperties.config.name())){
-            lines = openAndReadTextFile(value);
-            createEnvironmentProperties(lines, pers);
-        }else{
+        else if(property.equals(AvailableProperties.config.name()))
+            properties.put(
+                    pers, SimplePropertyFactory.createProperties(pers, lines)
+            );
+        else
             throw new LoadException(LoadException.ErrorCode.PROPERTY_NOT_FOUND, property);
-        }
-            
     }
     
     private void createCharactersAnimations(List<String> lines, String personality) throws LoadException {
@@ -164,48 +155,95 @@ public class ResourceManager {
             throw new LoadException(ex.errorMessage());
         }
     }
-    
+// ===========================================================================================================
+    // PROTOTYPES
+// ===========================================================================================================
     private void createPrototypes() throws LoadException {
         Set<String> keyset = animations.keySet();
         for(String pers : keyset)
-            if(AvailableCreature.isAvailable(pers))
-                this.creaturePrototypes.add(SimpleCreatureFactory.createPrototype(
-                                                AvailableCreature.valueOf(pers), animations.get(pers)
-                                            ));
-            else if(AvailablePowerUp.isAvailable(pers))
-                this.powerUpPrototypes.add(SimplePowerUpFactory.createPrototype(
-                                                AvailablePowerUp.valueOf(pers), animations.get(pers)
-                                            ));
-            else
+            if(!AvailablePrototypes.isAvailable(pers))
                 throw new LoadException(LoadException.ErrorCode.BAD_DEFINITION, pers);
+            else
+                prototypes.add(
+                        SimplePrototypeFactory.createPrototype(pers, animations.get(pers))
+                );
     }
     
-    private void createEnvironmentProperties(List<String> lines, String pers) throws LoadException {
-        IProperties myProp = new EnvironmentProperties();
-        
-        for(String line : lines){
-            if(line.equals(SAY_NEXT)){
-                levelProperties.put(pers, myProp);
-                continue;
-            }
-            
-            String[] keyValuePair = line.split(KEY_VALUE_SEPARATOR);
-            String key = keyValuePair[0].trim();
-            String value = keyValuePair[1].trim();
-            myProp.putProperty(key, value);
-        }
+    private IAvailable searchPersonality(String pers) throws LoadException {
+        for(IAvailable a : personality)
+            if(pers.equals(a.getMyPersonality()))
+                return a;
+        throw new LoadException(LoadException.ErrorCode.PERSONALITY_NOT_FOUND, pers);
     }
     
+// ===========================================================================================================
+    // ENVIRONMENT
+// ===========================================================================================================
     private void createEnvironmentPrototypes() throws LoadException {
-        Set<String> keyset = levelProperties.keySet();
+        Set<String> keyset = properties.keySet();
         
         for(String pers : keyset)
             if(AvailableEnvironment.isAvailable(pers))
-                levelPrototypes.add(EnvironmentBuilder.build(
-                        levelProperties.get(pers), powerUpPrototypes, AvailableEnvironment.valueOf(pers))
-                );
-            else
-                throw new LoadException(LoadException.ErrorCode.BAD_DEFINITION, pers);
+                parseEnvironmentProperties(pers);
+    }
+    
+    private void parseEnvironmentProperties(String pers) throws LoadException {
+        
+        for(IProperties p : properties.get(pers))
+            levelPrototypes.add(EnvironmentBuilder.build(
+                                    p, 
+                                    searchPrototypeAssociatedToMyLevelID(p.getPropertyByKey("levelID")), 
+                                    searchPersonality(pers)
+                                ));
+    }
+    
+    private List<IConfigurable> searchPrototypeAssociatedToMyLevelID(String levelID) throws LoadException {
+        List<IConfigurable> configuredPrototypes = new ArrayList<>();
+        
+        Set<String> keyset = properties.keySet();
+        for(String pers : keyset)
+            if(AvailablePrototypes.isAvailable(pers) && isAssociatedToLevelID(pers, levelID))
+               cloneAndConfigurePrototype(configuredPrototypes, pers, levelID);
+        return configuredPrototypes;
+    }
+    
+    private boolean isAssociatedToLevelID(String pers, String levelID) throws LoadException{
+        for(IProperties p : properties.get(pers))
+            if(levelID.equals(p.getPropertyByKey("levelID")))
+                return true;
+        return false;
+    }
+    
+    private void cloneAndConfigurePrototype(List<IConfigurable> prot, String pers, String levelID) throws LoadException {
+        ICloneable prototype = searchPrototypeByPersonality(pers);
+        IProperties prototypeProp = searchPropertyByPersonalityAndLevelID(pers, levelID);
+        int howmany = Integer.parseInt(prototypeProp.getPropertyByKey("howmany"));
+        for(int i = 0; i < howmany; i++)
+            prot.add(configurePrototype(prototype, prototypeProp, i));
+    }
+    
+    private IConfigurable configurePrototype(ICloneable prototype, IProperties cloneProp, int index) throws LoadException{
+        IConfigurable config = (IConfigurable) prototype.clone();
+        config.configure(cloneProp);
+        int xPosition = (Integer.parseInt(cloneProp.getPropertyByKey("hspace"))*index) + 500;
+        System.out.println("xPos = " + xPosition);
+        
+        config.putProperty("xPosition", Integer.toString(xPosition));
+        return config;
+    }
+            
+    private ICloneable searchPrototypeByPersonality(String pers) throws LoadException {
+        for(ICloneable c : prototypes)
+            if(c.matchPersonality(pers))
+                return c;
+        throw new LoadException(LoadException.ErrorCode.PERSONALITY_NOT_FOUND, pers);
+    }
+    
+    private IProperties searchPropertyByPersonalityAndLevelID(String pers, String levelID) throws LoadException{
+        for(IProperties p : properties.get(pers))
+            if(levelID.equals(p.getPropertyByKey("levelID")))
+                return p;
+        throw new LoadException(LoadException.ErrorCode.NO_LEVELID_MATCH, levelID);
     }
     
 // ===========================================================================================================
@@ -237,22 +275,23 @@ public class ResourceManager {
     }
     
 // ===========================================================================================================
-    public ICreature getPlayerByType(AvailableCreature type) throws LoadException {
-        for(ICreature c : this.creaturePrototypes)
-            if(c.matchPersonality(type))
-                return c;
-        throw new LoadException(LoadException.ErrorCode.CREATURE_NOT_FOUND, type.name());
+    public IUpdatable getPlayerByType(String pers) throws LoadException {
+        for(ICloneable c : this.prototypes)
+            if(c.matchPersonality(pers))
+                return (IUpdatable) c.clone();
+        throw new LoadException(LoadException.ErrorCode.CREATURE_NOT_FOUND, pers);
     }
     
-    public IEnvironment getLevel(AvailableEnvironment type) throws LoadException {
-        for(IEnvironment e : this.levelPrototypes)
-            if(e.matchType(type))
-                return e;
-        throw new LoadException(LoadException.ErrorCode.ENVIRONMENT_NOT_FOUND, type.name());
+    public IUpdatable getLevel(String pers) throws LoadException {
+        for(Iterator<IUpdatable> it = this.levelPrototypes.iterator(); it.hasNext();){
+            ICloneable env = (ICloneable) it.next();
+            if(env.matchPersonality(pers))
+                return (IUpdatable) env;
+        }
+        throw new LoadException(LoadException.ErrorCode.ENVIRONMENT_NOT_FOUND, pers);
     }
     
 }
 
 // ===========================================================================================================
-
     

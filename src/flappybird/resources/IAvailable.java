@@ -9,14 +9,8 @@ package flappybird.resources;
  *
  * @author davidecolombo
  */
-public enum AvailablePowerUp {
-    wallup, walldown;
+public interface IAvailable {
     
-    public static boolean isAvailable(String pers){
-        for(AvailablePowerUp val : AvailablePowerUp.values())
-            if(pers.equals(val.name()))
-                return true;
-        return false;
-    }
+    public abstract String getMyPersonality();
     
 }

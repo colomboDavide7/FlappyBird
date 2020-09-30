@@ -9,10 +9,14 @@ package flappybird.resources;
  *
  * @author davidecolombo
  */
-public interface IProperties {
+public interface IConfigurable {
     
-    public abstract String getPropertyByKey(String key) throws LoadException;
+    public abstract void configure(IProperties myProperties);
     
     public abstract void putProperty(String key, String value) throws LoadException;
-        
+    
+    public abstract String getProperty(String key) throws LoadException;
+    
+    public abstract boolean matchPersonality(String pers);
+    
 }

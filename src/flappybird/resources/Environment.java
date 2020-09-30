@@ -7,46 +7,58 @@ package flappybird.resources;
 
 import java.awt.Graphics;
 import java.awt.Image;
+import java.util.Iterator;
 import java.util.List;
 
 /**
  *
  * @author davidecolombo
  */
-public class Environment implements IEnvironment {
+public class Environment implements IUpdatable, IRenderable, ICloneable {
     
-    private AvailableEnvironment type;
+    private IAvailable personality;
     private Image background;
-    private List<IPowerUp> powerUp;
+    private List<IUpdatable> updatable;
           
-    public Environment(List<IPowerUp> powerUp, Image background, AvailableEnvironment type){
+    public Environment(List<IUpdatable> updatable, Image background, IAvailable pers){
         this.background = background;
-        this.type = type;
-        this.powerUp = powerUp;
+        this.personality = pers;
+        this.updatable = updatable;
     }
     
     @Override
     public void draw(Graphics g) {
         g.drawImage(this.background, 0, 0, null);
         
-        for(IPowerUp p : powerUp)
+        for (Iterator<IUpdatable> it = updatable.iterator(); it.hasNext();) {
+            IRenderable p = (IRenderable) it.next();
             p.draw(g);
+        }
     }
 
     @Override
     public void update() {
-        for(IPowerUp p : powerUp)
-            p.update(this.background.getWidth(null));
+        for(IUpdatable p : updatable)
+            p.update();
+    }
+    
+    public int getWidthInPixel(){
+        return this.background.getWidth(null);
+    }
+    
+    public int getHeightInPixel(){
+        return this.background.getHeight(null);
     }
 
     @Override
-    public boolean matchType(AvailableEnvironment type) {
-        return this.type == type;
+    public ICloneable clone() {
+        // for now do nothing
+        return null;
     }
 
     @Override
-    public Image getBackgroundImage() {
-        return this.background;
+    public boolean matchPersonality(String pers) {
+        return pers.equals(this.personality.getMyPersonality());
     }
     
 }

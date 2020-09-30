@@ -10,15 +10,17 @@
 # are ignored!!!
 
 levelID = easy_wall
-path    = images/background.jpg
+howmany = 3
+hspace  = 160
+maxrandom = 0
+slotheight = 0
 
 NEXT
 
-# levelID = easy_rock
-# path    = images/bck.jpg
+#levelID = medium_wall
+#howmany = 3
+#hspace = 120
+#maxrandom = 0
+#slotheight = 0
 
 # NEXT
-
-# The 'NEXT' indicates that from that point begins a new easy level configuration
-
-

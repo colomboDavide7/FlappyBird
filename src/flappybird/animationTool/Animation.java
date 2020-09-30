@@ -23,12 +23,10 @@ public class Animation implements IAnimation {
     private List<BufferedImage> sprites;
     private AnimationType type;
 
+    // This method is called by the AnimationBuilder during the configuration
+    // of all prototypes. In this case we don't create a new AnimationEngine 
+    // because we don't want to waste memory for thread we don't use.
     public Animation(List<BufferedImage> sprites, AnimationType type){
-        if(sprites.size() > 1){
-            this.engine = new AnimationEngine(ENGINE_DELAY, sprites.size());
-            this.engine.startEngine();
-        }
-        
         this.sprites = sprites;
         this.type = type;
     }

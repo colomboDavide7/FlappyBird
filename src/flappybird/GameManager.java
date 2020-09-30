@@ -7,10 +7,10 @@ package flappybird;
 
 import flappybird.resources.AnimationType;
 import flappybird.engine.Clock;
-import flappybird.resources.AvailableCreature;
-import flappybird.resources.AvailableEnvironment;
-import flappybird.resources.ICreature;
-import flappybird.resources.IEnvironment;
+import flappybird.resources.Bird;
+import flappybird.resources.Environment;
+import flappybird.resources.IPlayer;
+import flappybird.resources.IUpdatable;
 import flappybird.resources.LoadException;
 import flappybird.resources.ResourceManager;
 import flappybird.view.Display;
@@ -51,16 +51,21 @@ public class GameManager implements Observer, KeyListener {
         this.resManager = ResourceManager.getInstance();
         this.resManager.loadResources(propertyFile);
         
-        IEnvironment currentEnvironment = resManager.getLevel(AvailableEnvironment.easy);
-        int widthInPixel = currentEnvironment.getBackgroundImage().getWidth(null);
-        int heightInPixel = currentEnvironment.getBackgroundImage().getHeight(null);
-        ICreature currentPlayer = resManager.getPlayerByType(AvailableCreature.bird);
-        currentPlayer.setLocation(widthInPixel / 2, heightInPixel / 2);
+        IUpdatable currentEnvironment = resManager.getLevel("easy");
+        IUpdatable currentPlayer      = resManager.getPlayerByType("bird");
         
         // Board
         this.board = new GameBoard();
         this.board.setPlayer(currentPlayer);
         this.board.setEnvironment(currentEnvironment);
+        
+        // Configuration
+        Environment env = (Environment) currentEnvironment;
+        int widthInPixel = env.getWidthInPixel();
+        int heightInPixel = env.getHeightInPixel();
+        
+        IPlayer ply = (IPlayer) currentPlayer;
+        ply.setLocation(widthInPixel / 2, heightInPixel / 2);
         
         // Screen
         this.frame = new Screen(widthInPixel, heightInPixel);
@@ -103,6 +108,7 @@ public class GameManager implements Observer, KeyListener {
                 
             case KeyEvent.VK_SPACE:
                 board.updatePlayer(AnimationType.fly_right);
+                board.jump();
                 break;
         }
     }
@@ -113,6 +119,7 @@ public class GameManager implements Observer, KeyListener {
                 
             case KeyEvent.VK_SPACE:
                 board.updatePlayer(AnimationType.stay);
+                board.fall();
                 break;
         }
     }

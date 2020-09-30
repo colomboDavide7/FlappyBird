@@ -16,7 +16,8 @@ public class LoadException extends Exception {
         RESOURCE_NOT_FOUND, PROPERTY_NOT_FOUND, 
         EXTERNAL_API_ERROR, BAD_DEFINITION,
         CREATURE_NOT_FOUND, POWER_UP_NOT_FOUND, 
-        INVALID_PROPERTY, ENVIRONMENT_NOT_FOUND;
+        INVALID_PROPERTY, ENVIRONMENT_NOT_FOUND, 
+        PERSONALITY_NOT_FOUND, NO_LEVELID_MATCH;
     }
     
     private String errorMessage = "";
@@ -78,6 +79,14 @@ public class LoadException extends Exception {
                 return String.format("%s error code has occured.\n"
                                    + "The property '%s' is invalid.", 
                                      errorCode, invalidResource);
+            case PERSONALITY_NOT_FOUND: 
+                return String.format("%s error code has occured.\n"
+                                   + "The personality: '%s' doesn't exist.", 
+                                     errorCode, invalidResource);
+            case NO_LEVELID_MATCH:
+                return String.format("%s error code has occured.\n"
+                                   + "No configuration associate to '%s' levelID.",
+                                     errorMessage, invalidResource);
         }
         return "";
     }

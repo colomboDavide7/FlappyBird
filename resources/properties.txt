@@ -6,9 +6,15 @@ definition = easy
 ==============================
 # PERS_property = filename
 
-bird_animation = bird_animation.txt
-wallup_animation = wallup_animation.txt
+# Animations
+bird_animation     = bird_animation.txt
+wallup_animation   = wallup_animation.txt
 walldown_animation = walldown_animation.txt
-easy_config    = easy_config.txt
+
+# Level
+wallup_config   = wallup_config.txt
+walldown_config = walldown_config.txt
+easy_config     = easy_config.txt
+
 
 ==============================

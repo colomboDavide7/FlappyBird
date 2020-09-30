@@ -7,66 +7,116 @@ package flappybird.resources;
 
 import flappybird.animationTool.IAnimation;
 import java.awt.Graphics;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  *
  * @author davidecolombo
  */
-public class Bird implements ICreature {
+public class Bird implements ICloneable, IUpdatable, IRenderable, IPlayer {
 
+    private final double FLY_START = -4.0;
+    private final double GRAVITY = 0.64;
+    private final double MAX_FALLING_SPEED = 6;
+    
     private List<IAnimation> animations;
     private IAnimation currentAnimation;
     
-    private AvailableCreature personality;
-    private float xPosition;
-    private float yPosition;
+    private IAvailable personality;
+    private double xPosition;
+    private double yPosition;
+    private double dy = 0;
+    private boolean jumping = false;
     
-    public Bird(List<IAnimation> animations, AvailableCreature pers) {
-        this.animations = animations;
+    public Bird(List<IAnimation> animations, IAvailable pers) {
+        this.animations       = animations;
         this.currentAnimation = animations.get(0);
-        this.personality = pers;
+        this.personality      = pers;
     }
-
-    @Override
-    public boolean matchPersonality(AvailableCreature pers) {
-        return this.personality == pers;
+    
+    private Bird(){
+        this.animations = new ArrayList<>();
     }
-
+    
+    private void setCurrentAnimationByType(AnimationType type){
+        for(IAnimation a : animations)
+            if(a.matchType(type))
+                this.currentAnimation = a;
+    }
+    
+// ==================================================================
+    // IPlayer's inherited methods
+// ==================================================================
     @Override
-    public void updateAnimation(AnimationType type) {
+    public void setLocation(int xInPixel, int yInPixel){
+        this.xPosition = xInPixel;
+        this.yPosition = yInPixel;
+    }
+    
+    @Override
+    public void updateAnimation(AnimationType type){
         this.currentAnimation.pauseAnimation();
+        setCurrentAnimationByType(type);
+        this.currentAnimation.resumeAnimation();
+    }
+    
+    @Override
+    public void jump() {
+        this.jumping = true;
+    }
+    
+    @Override
+    public void fall(){
+        this.jumping = false;
+    }
+    
+// ==================================================================
+    // ICloneable's inherited methods
+// ==================================================================
+    @Override
+    public Bird clone() {
+        Bird clone = new Bird();
         
         for(IAnimation a : animations)
-            if(a.matchType(type)){
-                a.resumeAnimation();
-                this.currentAnimation = a;
-            }
+            clone.animations.add(a.clone());
+        clone.currentAnimation = this.animations.get(0);
+        clone.personality = new AvailablePrototypes(this.personality.getMyPersonality());
+        
+        return clone;
+    }
+
+    @Override
+    public boolean matchPersonality(String pers) {
+        return pers.equals(this.personality.getMyPersonality());
     }
     
+// ==================================================================
+    // IUpdatable's inherited methods
+// ==================================================================
     @Override
-    public synchronized void draw(Graphics g) {
+    public void update() {
+
+        if(jumping)
+            this.dy = FLY_START;
+        else
+            this.dy += GRAVITY;
+        
+        if(this.dy >= MAX_FALLING_SPEED)
+            this.dy = MAX_FALLING_SPEED;
+        
+        this.yPosition += this.dy;
+    }
+    
+// ==================================================================
+    // IRenderable's inherited methods
+// ==================================================================
+    @Override
+    public void draw(Graphics g) {
         g.drawImage(this.currentAnimation.getFrame(), 
                     (int) xPosition, 
                     (int) yPosition, 
                     null);
-    }
-
-    @Override
-    public void setLocation(int xPos, int yPos) {
-        this.xPosition = xPos;
-        this.yPosition = yPos;
-        this.centerLocation();
-    }
-    
-    private void centerLocation(){
-        this.xPosition = this.xPosition - this.currentAnimation.getFrame().getWidth(null) / 2;
-        this.yPosition = this.yPosition - this.currentAnimation.getFrame().getHeight(null) / 2;
-    }   
-
-    @Override
-    public void update() {
-        // Location
     }
     
 }

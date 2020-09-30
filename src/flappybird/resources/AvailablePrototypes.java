@@ -9,21 +9,21 @@ package flappybird.resources;
  *
  * @author davidecolombo
  */
-public class AvailableEnvironment implements IAvailable {
-    
-    public enum Available {
-        easy, medium, hard;
+public class AvailablePrototypes implements IAvailable {
+
+    public static enum Available {
+        bird, wallup, walldown;
     }
     
-    public static boolean isAvailable(String value) {
-        for(Available e : Available.values())
-            if(value.equals(e.name()))
+    public static boolean isAvailable(String pers) {
+        for(Available a : Available.values())
+            if(pers.equals(a.name()))
                 return true;
         return false;
     }
-
-    public AvailableEnvironment(String myPersonality){
-        this.myPersonality = Available.valueOf(myPersonality);
+    
+    public AvailablePrototypes(String value) {
+        this.myPersonality = Available.valueOf(value);
     }
     
     private Available myPersonality;

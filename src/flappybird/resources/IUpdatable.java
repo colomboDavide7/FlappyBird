@@ -5,21 +5,12 @@
  */
 package flappybird.resources;
 
-import java.awt.Graphics;
-import java.awt.Image;
-
 /**
  *
  * @author davidecolombo
  */
-public interface IEnvironment {
-    
-    public abstract boolean matchType(AvailableEnvironment type);
+public interface IUpdatable {
     
     public abstract void update();
-    
-    public abstract void draw(Graphics g);
-    
-    public abstract Image getBackgroundImage();
     
 }

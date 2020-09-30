@@ -5,14 +5,14 @@
  */
 package flappybird.resources;
 
+import java.awt.Graphics;
+
 /**
  *
  * @author davidecolombo
  */
-public interface IProperties {
+public interface IRenderable {
     
-    public abstract String getPropertyByKey(String key) throws LoadException;
+    public abstract void draw(Graphics g);
     
-    public abstract void putProperty(String key, String value) throws LoadException;
-        
 }

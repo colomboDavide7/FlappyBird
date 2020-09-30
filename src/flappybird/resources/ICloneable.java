@@ -9,13 +9,10 @@ package flappybird.resources;
  *
  * @author davidecolombo
  */
-public enum AvailableCreature {
-    bird;
+public interface ICloneable {
     
-    public static boolean isAvailable(String pers) {
-        for(AvailableCreature val : AvailableCreature.values())
-            if(pers.equals(val.name()))
-                return true;
-        return false;
-    }
+    public abstract ICloneable clone();
+    
+    public abstract boolean matchPersonality(String pers);
+    
 }
