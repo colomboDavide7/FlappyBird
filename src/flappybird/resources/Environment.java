@@ -5,6 +5,9 @@
  */
 package flappybird.resources;
 
+import flappybird.generalInterfaces.IUpdatable;
+import flappybird.generalInterfaces.IRenderable;
+import flappybird.generalInterfaces.ICloneable;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.util.Iterator;

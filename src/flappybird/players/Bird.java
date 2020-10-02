@@ -3,9 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package flappybird.resources;
+package flappybird.players;
 
 import flappybird.animationTool.IAnimation;
+import flappybird.resources.AnimationType;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +15,7 @@ import java.util.List;
  *
  * @author davidecolombo
  */
-public class Bird implements ICloneable, IUpdatable, IRenderable, IPlayer {
+public class Bird implements IPlayer {
 
     private final double FLY_START = -4.0;
     private final double GRAVITY = 0.64;
@@ -23,16 +24,14 @@ public class Bird implements ICloneable, IUpdatable, IRenderable, IPlayer {
     private List<IAnimation> animations;
     private IAnimation currentAnimation;
     
-    private IAvailable personality;
     private double xPosition;
     private double yPosition;
     private double dy = 0;
     private boolean jumping = false;
     
-    public Bird(List<IAnimation> animations, IAvailable pers) {
+    public Bird(List<IAnimation> animations) {
         this.animations       = animations;
         this.currentAnimation = animations.get(0);
-        this.personality      = pers;
     }
     
     private Bird(){
@@ -81,14 +80,7 @@ public class Bird implements ICloneable, IUpdatable, IRenderable, IPlayer {
         for(IAnimation a : animations)
             clone.animations.add(a.clone());
         clone.currentAnimation = this.animations.get(0);
-        clone.personality = new AvailablePrototypes(this.personality.getMyPersonality());
-        
         return clone;
-    }
-
-    @Override
-    public boolean matchPersonality(String pers) {
-        return pers.equals(this.personality.getMyPersonality());
     }
     
 // ==================================================================

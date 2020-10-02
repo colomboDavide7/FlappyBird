@@ -6,7 +6,7 @@
 package flappybird.animationTool;
 
 import flappybird.resources.AnimationType;
-import flappybird.resources.IProperties;
+import flappybird.properties.IProperties;
 import flappybird.resources.LoadException;
 
 import java.awt.Image;

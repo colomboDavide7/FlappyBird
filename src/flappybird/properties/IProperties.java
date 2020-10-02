@@ -3,20 +3,18 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package flappybird.resources;
+package flappybird.properties;
+
+import flappybird.resources.LoadException;
 
 /**
  *
  * @author davidecolombo
  */
-public interface IConfigurable {
+public interface IProperties {
     
-    public abstract void configure(IProperties myProperties);
+    public abstract String getPropertyByKey(String key) throws LoadException;
     
     public abstract void putProperty(String key, String value) throws LoadException;
-    
-    public abstract String getProperty(String key) throws LoadException;
-    
-    public abstract boolean matchPersonality(String pers);
-    
+        
 }

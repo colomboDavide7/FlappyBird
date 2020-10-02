@@ -3,16 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package flappybird.resources;
+package flappybird.generalInterfaces;
 
 /**
  *
  * @author davidecolombo
  */
-public interface IProperties {
+public interface ICloneable {
     
-    public abstract String getPropertyByKey(String key) throws LoadException;
+    public abstract ICloneable clone();
     
-    public abstract void putProperty(String key, String value) throws LoadException;
-        
+    public abstract boolean matchPersonality(String pers);
+    
 }

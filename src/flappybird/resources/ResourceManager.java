@@ -5,9 +5,25 @@
  */
 package flappybird.resources;
 
+import flappybird.properties.IProperties;
+import flappybird.properties.AvailableProperties;
+import flappybird.properties.AnimationProperties;
+import flappybird.properties.SimplePropertyFactory;
+import flappybird.generalInterfaces.IUpdatable;
+import flappybird.generalInterfaces.IConfigurable;
+import flappybird.generalInterfaces.ICloneable;
+import flappybird.players.AvailablePlayer;
+import flappybird.players.IPlayer;
+import flappybird.players.SimplePlayerFactory;
 import flappybird.animationTool.IAnimation;
 import flappybird.animationTool.AnimationBuilder;
 import flappybird.animationTool.AnimationToolException;
+import flappybird.environment.AvailableEnvironment;
+import flappybird.environment.IEnvironment;
+import flappybird.powerUp.AvailablePowerUp;
+import flappybird.powerUp.IPowerUp;
+import flappybird.powerUp.SimplePowerUpFactory;
+import flappybird.properties.WallProperties;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -48,6 +64,11 @@ public class ResourceManager {
     private List<ICloneable> prototypes;
     private List<IUpdatable> levelPrototypes;
     
+    private List<IPlayer> players;
+    private List<IPowerUp> powerUps;
+    private List<IEnvironment> env;
+    private List<String> personalities;
+    
     private Map<String, List<IAnimation>> animations;
     private Map<String, List<IProperties>> properties;
     
@@ -83,6 +104,11 @@ public class ResourceManager {
     }
     
     private void initObjects(){
+        this.personalities = new ArrayList<>();
+        this.powerUps = new ArrayList<>();
+        this.players  = new ArrayList<>();
+        this.env      = new ArrayList<>();
+        
         this.personality = new ArrayList<>();
         this.prototypes  = new ArrayList<>();
         this.levelPrototypes = new ArrayList<>();
@@ -106,28 +132,22 @@ public class ResourceManager {
             parseProperty(key, value);
     }
     
-    private void parseDefinition(String value) throws LoadException {
-        if(AvailablePrototypes.isAvailable(value))
-            personality.add(new AvailablePrototypes(value));
-        else if (AvailableEnvironment.isAvailable(value))
-            personality.add(new AvailableEnvironment(value));
+    private void parseDefinition(String def) throws LoadException {
+        if(AvailablePlayer.isAvailable(def) ||
+           AvailablePowerUp.isAvailable(def) ||
+           AvailableEnvironment.isAvailable(def))
+         this.personalities.add(def);
         else
-            throw new LoadException(LoadException.ErrorCode.BAD_DEFINITION, value);
+            throw new LoadException(LoadException.ErrorCode.BAD_DEFINITION, def);
     }
     
-    private void parseProperty(String key, String value) throws LoadException {
+    private void parseProperty(String key, String file) throws LoadException {
         String[] persPropertyPair = key.split(PROPERTY_IDENT_SEPARATOR);
         String pers     = persPropertyPair[0].trim();
         String property = persPropertyPair[1].trim();
-        
-        List<String> lines = openAndReadTextFile(value);
-        
-        if(property.equals(AvailableProperties.animation.name()))
-            createCharactersAnimations(lines, pers);
-        else if(property.equals(AvailableProperties.config.name()))
-            properties.put(
-                    pers, SimplePropertyFactory.createProperties(pers, lines)
-            );
+        List<String> lines = openAndReadTextFile(file);
+        if(AvailableProperties.isValid(property))
+            SimplePropertyFactory.createProperties(pers, lines);
         else
             throw new LoadException(LoadException.ErrorCode.PROPERTY_NOT_FOUND, property);
     }
@@ -155,18 +175,23 @@ public class ResourceManager {
             throw new LoadException(ex.errorMessage());
         }
     }
+    
 // ===========================================================================================================
     // PROTOTYPES
 // ===========================================================================================================
     private void createPrototypes() throws LoadException {
         Set<String> keyset = animations.keySet();
         for(String pers : keyset)
-            if(!AvailablePrototypes.isAvailable(pers))
-                throw new LoadException(LoadException.ErrorCode.BAD_DEFINITION, pers);
+            if(AvailablePlayer.isAvailable(pers))
+                players.add(SimplePlayerFactory.createPlayerByType(
+                                AvailablePlayer.valueOf(pers), animations.get(pers)
+                ));
+            else if(AvailablePowerUp.isAvailable(pers))
+                powerUps.add(SimplePowerUpFactory.createPowerUpByType(
+                                AvailablePowerUp.valueOf(pers)
+                ));
             else
-                prototypes.add(
-                        SimplePrototypeFactory.createPrototype(pers, animations.get(pers))
-                );
+                throw new LoadException(LoadException.ErrorCode.BAD_DEFINITION, pers);
     }
     
     private IAvailable searchPersonality(String pers) throws LoadException {

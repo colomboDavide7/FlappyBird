@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package flappybird.resources;
+package flappybird.properties;
 
+import flappybird.resources.LoadException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,8 +16,7 @@ import java.util.Map;
 public class WallProperties implements IProperties {
     
     public enum ValidProperties{
-        howmany, hspace, maxrandom, slotheight, levelID, 
-        xPosition, yPosition, xInit, yInit, height;
+        levelID, howmany, hspace, maxrandom, slotheight;
     }
     
     public static boolean isValid(String prop){

@@ -7,10 +7,10 @@ package flappybird;
 
 import flappybird.resources.AnimationType;
 import flappybird.engine.Clock;
-import flappybird.resources.Bird;
+import flappybird.players.Bird;
 import flappybird.resources.Environment;
-import flappybird.resources.IPlayer;
-import flappybird.resources.IUpdatable;
+import flappybird.players.IPlayer;
+import flappybird.generalInterfaces.IUpdatable;
 import flappybird.resources.LoadException;
 import flappybird.resources.ResourceManager;
 import flappybird.view.Display;

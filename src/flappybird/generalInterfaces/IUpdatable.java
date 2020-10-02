@@ -3,16 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package flappybird.resources;
+package flappybird.generalInterfaces;
 
 /**
  *
  * @author davidecolombo
  */
-public interface ICloneable {
+public interface IUpdatable {
     
-    public abstract ICloneable clone();
-    
-    public abstract boolean matchPersonality(String pers);
+    public abstract void update();
     
 }

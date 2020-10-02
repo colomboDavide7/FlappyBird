@@ -3,8 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package flappybird.resources;
+package flappybird.properties;
 
+import com.sun.xml.internal.messaging.saaj.soap.name.NameImpl;
+import flappybird.environment.AvailableEnvironment;
+import flappybird.players.AvailablePlayer;
+import flappybird.powerUp.AvailablePowerUp;
+import flappybird.resources.LoadException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,23 +23,37 @@ public class SimplePropertyFactory {
     private static final String SAY_NEXT = "NEXT";
     
     public static List<IProperties> createProperties(String pers, List<String> lines) throws LoadException{
-        
+
+        if(AvailablePlayer.isAvailable(pers))
+            return createPlayerProperties(AvailablePlayer.valueOf(pers), lines);
+        else if(AvailablePowerUp.isAvailable(pers))
+            return createPowerUpProperties(AvailablePowerUp.valueOf(pers), lines);
+        else if(AvailableEnvironment.isAvailable(pers))
+            return createEnvironmentProperties(lines);
+        else 
+            throw new LoadException(LoadException.ErrorCode.BAD_DEFINITION, pers);
+    }
+    
+    private static List<IProperties> createPlayerProperties(AvailablePlayer pers, List<String> lines) throws LoadException{
         switch(pers){
-            case "wallup":
-                return createWallProperties(lines);          
-            case "walldown":
-                return createWallProperties(lines);
-            case "easy":
-                return createEnvironmentProperties(lines);
-            case "medium":
-                return createEnvironmentProperties(lines);
-            case "hard":
-                return createEnvironmentProperties(lines);
+            case bird:
+                return null;
             default:
-                throw new LoadException(LoadException.ErrorCode.PERSONALITY_NOT_FOUND, pers);
+                throw new LoadException(LoadException.ErrorCode.BAD_DEFINITION, pers.name());
         }
     }
     
+    private static List<IProperties> createPowerUpProperties(AvailablePowerUp pers, List<String> lines) throws LoadException{
+        switch(pers){
+            case upperWall:
+                return createWallProperties(lines);
+            case downWall:
+                return createWallProperties(lines);
+            default:
+                throw new LoadException(LoadException.ErrorCode.BAD_DEFINITION, pers.name());
+        }
+    }
+        
     private static List<IProperties> createWallProperties(List<String> lines) throws LoadException{
         List<IProperties> properties = new ArrayList<>();
         WallProperties myProp = new WallProperties();
@@ -71,6 +90,7 @@ public class SimplePropertyFactory {
             String value = keyValuePair[1].trim();
             myProp.putProperty(key, value);
         }
+        
         return properties;
     }
     

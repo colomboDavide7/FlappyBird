@@ -3,14 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package flappybird.resources;
+package flappybird.generalInterfaces;
+
+import java.awt.Graphics;
 
 /**
  *
  * @author davidecolombo
  */
-public interface IUpdatable {
+public interface IRenderable {
     
-    public abstract void update();
+    public abstract void draw(Graphics g);
     
 }

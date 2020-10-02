@@ -6,9 +6,9 @@
 package flappybird;
 
 import flappybird.resources.AnimationType;
-import flappybird.resources.IPlayer;
-import flappybird.resources.IRenderable;
-import flappybird.resources.IUpdatable;
+import flappybird.players.IPlayer;
+import flappybird.generalInterfaces.IRenderable;
+import flappybird.generalInterfaces.IUpdatable;
 import flappybird.view.Display;
 import java.awt.Graphics;
 

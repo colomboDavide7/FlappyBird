@@ -5,6 +5,9 @@
  */
 package flappybird.resources;
 
+import flappybird.properties.IProperties;
+import flappybird.generalInterfaces.IUpdatable;
+import flappybird.generalInterfaces.IConfigurable;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;

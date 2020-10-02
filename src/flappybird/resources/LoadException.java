@@ -17,7 +17,8 @@ public class LoadException extends Exception {
         EXTERNAL_API_ERROR, BAD_DEFINITION,
         CREATURE_NOT_FOUND, POWER_UP_NOT_FOUND, 
         INVALID_PROPERTY, ENVIRONMENT_NOT_FOUND, 
-        PERSONALITY_NOT_FOUND, NO_LEVELID_MATCH;
+        PERSONALITY_NOT_FOUND, NO_LEVELID_MATCH, 
+        INVALID_PLAYER_TYPE;
     }
     
     private String errorMessage = "";
@@ -87,6 +88,10 @@ public class LoadException extends Exception {
                 return String.format("%s error code has occured.\n"
                                    + "No configuration associate to '%s' levelID.",
                                      errorMessage, invalidResource);
+            case INVALID_PLAYER_TYPE: 
+                return String.format("%s error code has occured.\n"
+                                   + "The player type '%s' is invalid.", 
+                                     errorCode, invalidResource);
         }
         return "";
     }

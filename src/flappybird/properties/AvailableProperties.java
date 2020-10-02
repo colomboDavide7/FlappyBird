@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package flappybird.resources;
+package flappybird.properties;
 
 /**
  *
@@ -12,11 +12,11 @@ package flappybird.resources;
 public enum AvailableProperties {
     animation, config;
     
-    public static boolean isValid(String myProp) throws LoadException {
+    public static boolean isValid(String myProp) {
         for(AvailableProperties prop : AvailableProperties.values())
             if(myProp.equals(prop.name()))
                 return true;
-        throw new LoadException(LoadException.ErrorCode.PROPERTY_NOT_FOUND, myProp);
+        return false;
     }
     
 }
