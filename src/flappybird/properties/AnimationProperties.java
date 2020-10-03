@@ -43,15 +43,4 @@ public class AnimationProperties implements IProperties {
         myProperties.put(key, value);
     }
     
-    @Override
-    public String toString(){
-        StringBuilder sb = new StringBuilder();
-        
-        Set<String> keyset = myProperties.keySet();
-        for(String key : keyset)
-            sb.append(key).append(" = ").append(myProperties.get(key)).append("\n");
-        
-        return sb.toString();
-    }
-    
 }

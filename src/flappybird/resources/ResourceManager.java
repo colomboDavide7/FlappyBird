@@ -23,7 +23,6 @@ import flappybird.environment.IEnvironment;
 import flappybird.powerUp.AvailablePowerUp;
 import flappybird.powerUp.IPowerUp;
 import flappybird.powerUp.SimplePowerUpFactory;
-import flappybird.properties.WallProperties;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -146,31 +145,22 @@ public class ResourceManager {
         String pers     = persPropertyPair[0].trim();
         String property = persPropertyPair[1].trim();
         List<String> lines = openAndReadTextFile(file);
-        if(AvailableProperties.isValid(property))
-            SimplePropertyFactory.createProperties(pers, lines);
-        else
-            throw new LoadException(LoadException.ErrorCode.PROPERTY_NOT_FOUND, property);
+        List<IProperties> myProp = SimplePropertyFactory.createProperties(
+                pers, lines, AvailableProperties.valueOf(property)
+        );
+        
+        if(property.equals(AvailableProperties.animation.name()))
+            createCharactersAnimations(myProp, pers);
+        else if(property.equals(AvailableProperties.config.name()))
+            properties.put(pers, myProp);
     }
     
-    private void createCharactersAnimations(List<String> lines, String personality) throws LoadException {
+    private void createCharactersAnimations(List<IProperties> myProp, String pers) throws LoadException {
         List<IAnimation> myAnimations = new ArrayList<>();
-        IProperties myProperties = new AnimationProperties();
-        
         try{
-            for(String line : lines){
-                if(line.equals(SAY_NEXT)){
-                    myAnimations.add(AnimationBuilder.build(myProperties));
-                    continue;
-                }
-                
-                String[] keyValuePair = line.split(KEY_VALUE_SEPARATOR);
-                String key = keyValuePair[0].trim();
-                String value = keyValuePair[1].trim();
-                myProperties.putProperty(key, value);
-            }
-            
-            this.animations.put(personality, myAnimations);
-        
+            for(IProperties prop : myProp)
+                myAnimations.add(AnimationBuilder.build(prop));
+            this.animations.put(pers, myAnimations);
         } catch (AnimationToolException ex) {
             throw new LoadException(ex.errorMessage());
         }
