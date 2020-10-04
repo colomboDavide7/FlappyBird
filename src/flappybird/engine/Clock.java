@@ -39,6 +39,10 @@ public class Clock extends Observable {
         engine.startEngine();
     }
     
+    public void gameOver(){
+        this.engine.stopEngine();
+    }
+    
     void tick(){
         this.setChanged();
         this.notifyObservers(new TimerTickEvent(this));

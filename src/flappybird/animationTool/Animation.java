@@ -5,7 +5,6 @@
  */
 package flappybird.animationTool;
 
-import flappybird.resources.AnimationType;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
@@ -27,6 +26,10 @@ public class Animation implements IAnimation {
     // of all prototypes. In this case we don't create a new AnimationEngine 
     // because we don't want to waste memory for thread we don't use.
     public Animation(List<BufferedImage> sprites, AnimationType type){
+        if(sprites.size() > 1){
+            engine = new AnimationEngine(this.ENGINE_DELAY, sprites.size());
+            engine.startEngine();
+        }
         this.sprites = sprites;
         this.type = type;
     }

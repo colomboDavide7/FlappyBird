@@ -5,13 +5,7 @@
  */
 package flappybird.resources;
 
-import flappybird.properties.IProperties;
-import flappybird.properties.AvailableProperties;
-import flappybird.properties.AnimationProperties;
-import flappybird.properties.SimplePropertyFactory;
-import flappybird.generalInterfaces.IUpdatable;
-import flappybird.generalInterfaces.IConfigurable;
-import flappybird.generalInterfaces.ICloneable;
+import flappybird.environment.EnvironmentBuilder;
 import flappybird.players.AvailablePlayer;
 import flappybird.players.IPlayer;
 import flappybird.players.SimplePlayerFactory;
@@ -23,6 +17,9 @@ import flappybird.environment.IEnvironment;
 import flappybird.powerUp.AvailablePowerUp;
 import flappybird.powerUp.IPowerUp;
 import flappybird.powerUp.SimplePowerUpFactory;
+import flappybird.properties.AvailableProperties;
+import flappybird.properties.BasePropertyFactory;
+import flappybird.properties.EnvironmentPropertiesFactory;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -30,9 +27,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import flappybird.properties.IBaseProperties;
+import flappybird.properties.IPowerUpProperties;
+import flappybird.properties.PowerUpPropertyFactory;
 
 /**
  *
@@ -55,21 +54,17 @@ public class ResourceManager {
 // ===========================================================================================================    
     private final String KEY_VALUE_SEPARATOR = "=";
     private final String PROPERTY_IDENT_SEPARATOR = "_";
-    private final String SAY_NEXT = "NEXT";
     
     private final String DEFINITION_KEY = "definition";
-
-    private List<IAvailable> personality;
-    private List<ICloneable> prototypes;
-    private List<IUpdatable> levelPrototypes;
     
     private List<IPlayer> players;
     private List<IPowerUp> powerUps;
     private List<IEnvironment> env;
     private List<String> personalities;
-    
-    private Map<String, List<IAnimation>> animations;
-    private Map<String, List<IProperties>> properties;
+
+    private Map<String, List<IPowerUpProperties>> powerUpProp;
+    private Map<String, List<IBaseProperties>> envProp;
+    private Map<String, List<IBaseProperties>> animationProp;
     
     private boolean resourcesLoaded = false;
     
@@ -81,7 +76,7 @@ public class ResourceManager {
             
             // Loading
             loadProperties(propertyFile);
-            
+
             // Creating
             createPrototypes();
             
@@ -108,11 +103,9 @@ public class ResourceManager {
         this.players  = new ArrayList<>();
         this.env      = new ArrayList<>();
         
-        this.personality = new ArrayList<>();
-        this.prototypes  = new ArrayList<>();
-        this.levelPrototypes = new ArrayList<>();
-        this.properties = new HashMap<>();
-        this.animations = new HashMap<>();
+        this.envProp = new HashMap<>();
+        this.powerUpProp = new HashMap<>();
+        this.animationProp = new HashMap<>();
     }
     
     private void parseFile(List<String> lines) throws LoadException{
@@ -145,24 +138,27 @@ public class ResourceManager {
         String pers     = persPropertyPair[0].trim();
         String property = persPropertyPair[1].trim();
         List<String> lines = openAndReadTextFile(file);
-        List<IProperties> myProp = SimplePropertyFactory.createProperties(
-                pers, lines, AvailableProperties.valueOf(property)
-        );
         
-        if(property.equals(AvailableProperties.animation.name()))
-            createCharactersAnimations(myProp, pers);
-        else if(property.equals(AvailableProperties.config.name()))
-            properties.put(pers, myProp);
-    }
-    
-    private void createCharactersAnimations(List<IProperties> myProp, String pers) throws LoadException {
-        List<IAnimation> myAnimations = new ArrayList<>();
-        try{
-            for(IProperties prop : myProp)
-                myAnimations.add(AnimationBuilder.build(prop));
-            this.animations.put(pers, myAnimations);
-        } catch (AnimationToolException ex) {
-            throw new LoadException(ex.errorMessage());
+        if(property.equals(AvailableProperties.animation.name())){
+            animationProp.put(
+                    pers, 
+                    BasePropertyFactory.createProperties(AvailableProperties.valueOf(property), lines
+            ));
+        }else{
+            if(AvailablePlayer.isAvailable(pers))
+                System.out.println("no player properties yet");
+            else if(AvailablePowerUp.isAvailable(pers))
+                powerUpProp.put(
+                        pers, 
+                        PowerUpPropertyFactory.createProperties(AvailablePowerUp.valueOf(pers), lines
+                ));
+            else if(AvailableEnvironment.isAvailable(pers))
+                envProp.put(
+                        pers, 
+                        EnvironmentPropertiesFactory.createProperties(AvailableEnvironment.valueOf(pers), lines
+                ));
+            else
+                throw new LoadException(LoadException.ErrorCode.BAD_DEFINITION, pers);
         }
     }
     
@@ -170,94 +166,98 @@ public class ResourceManager {
     // PROTOTYPES
 // ===========================================================================================================
     private void createPrototypes() throws LoadException {
-        Set<String> keyset = animations.keySet();
+        Set<String> keyset = animationProp.keySet();
         for(String pers : keyset)
             if(AvailablePlayer.isAvailable(pers))
                 players.add(SimplePlayerFactory.createPlayerByType(
-                                AvailablePlayer.valueOf(pers), animations.get(pers)
+                                AvailablePlayer.valueOf(pers), createCharactersAnimations(pers)
                 ));
             else if(AvailablePowerUp.isAvailable(pers))
                 powerUps.add(SimplePowerUpFactory.createPowerUpByType(
-                                AvailablePowerUp.valueOf(pers)
+                                AvailablePowerUp.valueOf(pers), createCharactersAnimations(pers)
                 ));
             else
                 throw new LoadException(LoadException.ErrorCode.BAD_DEFINITION, pers);
     }
-    
-    private IAvailable searchPersonality(String pers) throws LoadException {
-        for(IAvailable a : personality)
-            if(pers.equals(a.getMyPersonality()))
-                return a;
-        throw new LoadException(LoadException.ErrorCode.PERSONALITY_NOT_FOUND, pers);
+        
+    private List<IAnimation> createCharactersAnimations(String pers) throws LoadException {
+        List<IAnimation> myAnimations = new ArrayList<>();
+        try{
+            for(IBaseProperties prop : animationProp.get(pers)){
+                myAnimations.add(AnimationBuilder.build(prop));
+            }
+            return myAnimations;
+        } catch (AnimationToolException ex) {
+            throw new LoadException(ex.errorMessage());
+        }
     }
     
 // ===========================================================================================================
     // ENVIRONMENT
 // ===========================================================================================================
     private void createEnvironmentPrototypes() throws LoadException {
-        Set<String> keyset = properties.keySet();
-        
+        Set<String> keyset = envProp.keySet();
         for(String pers : keyset)
-            if(AvailableEnvironment.isAvailable(pers))
-                parseEnvironmentProperties(pers);
+            parseEnvironmentProperties(pers);
     }
     
     private void parseEnvironmentProperties(String pers) throws LoadException {
-        
-        for(IProperties p : properties.get(pers))
-            levelPrototypes.add(EnvironmentBuilder.build(
-                                    p, 
-                                    searchPrototypeAssociatedToMyLevelID(p.getPropertyByKey("levelID")), 
-                                    searchPersonality(pers)
-                                ));
+        for(IBaseProperties myProp : envProp.get(pers))
+            env.add(EnvironmentBuilder.build(
+                        AvailableEnvironment.valueOf(pers), 
+                        myProp, 
+                        searchPowerUpAssociatedToMyLevelID(myProp.getPropertyByKey("levelID"))
+            ));
     }
     
-    private List<IConfigurable> searchPrototypeAssociatedToMyLevelID(String levelID) throws LoadException {
-        List<IConfigurable> configuredPrototypes = new ArrayList<>();
-        
-        Set<String> keyset = properties.keySet();
+    private List<IPowerUp> searchPowerUpAssociatedToMyLevelID(String levelID) throws LoadException {
+        List<IPowerUp> searchedPrototypes = new ArrayList<>();
+        Set<String> keyset = powerUpProp.keySet();
         for(String pers : keyset)
-            if(AvailablePrototypes.isAvailable(pers) && isAssociatedToLevelID(pers, levelID))
-               cloneAndConfigurePrototype(configuredPrototypes, pers, levelID);
-        return configuredPrototypes;
+            if(isAssociatedToLevelID(pers, levelID))
+               cloneAndConfigurePowerUp(searchedPrototypes, pers, levelID);
+        return searchedPrototypes;
     }
     
     private boolean isAssociatedToLevelID(String pers, String levelID) throws LoadException{
-        for(IProperties p : properties.get(pers))
+        for(IPowerUpProperties p : powerUpProp.get(pers))
             if(levelID.equals(p.getPropertyByKey("levelID")))
                 return true;
         return false;
     }
     
-    private void cloneAndConfigurePrototype(List<IConfigurable> prot, String pers, String levelID) throws LoadException {
-        ICloneable prototype = searchPrototypeByPersonality(pers);
-        IProperties prototypeProp = searchPropertyByPersonalityAndLevelID(pers, levelID);
-        int howmany = Integer.parseInt(prototypeProp.getPropertyByKey("howmany"));
-        for(int i = 0; i < howmany; i++)
-            prot.add(configurePrototype(prototype, prototypeProp, i));
+    private void cloneAndConfigurePowerUp(List<IPowerUp> searchedPrototypes, String pers, String levelID) throws LoadException {
+        IPowerUp prototype = searchPrototypeByPersonality(pers);
+        IPowerUpProperties prop = searchPropertyByPersonalityAndLevelID(pers, levelID);
+        
+        int numberOfClone = Integer.parseInt(prop.getPropertyByKey("howmany"));
+        for(int i = 0; i < numberOfClone; i++)
+            searchedPrototypes.add(configurePrototype(prototype, prop, i));
     }
     
-    private IConfigurable configurePrototype(ICloneable prototype, IProperties cloneProp, int index) throws LoadException{
-        IConfigurable config = (IConfigurable) prototype.clone();
-        config.configure(cloneProp);
-        int xPosition = (Integer.parseInt(cloneProp.getPropertyByKey("hspace"))*index) + 500;
-        System.out.println("xPos = " + xPosition);
+    private IPowerUp configurePrototype(
+            IPowerUp prototype, IPowerUpProperties cloneProp, int index
+    ) throws LoadException{
+        IPowerUp clone = (IPowerUp) prototype.cloneObject();
+        IPowerUpProperties clonedProperties = (IPowerUpProperties) cloneProp.cloneObject();
+        clone.configure(clonedProperties);
         
-        config.putProperty("xPosition", Integer.toString(xPosition));
-        return config;
+        int xPosition = (Integer.parseInt(clonedProperties.getPropertyByKey("hspace")))*index;
+        clone.setXPositionInPixel(xPosition + 500);
+        return clone;
     }
             
-    private ICloneable searchPrototypeByPersonality(String pers) throws LoadException {
-        for(ICloneable c : prototypes)
+    private IPowerUp searchPrototypeByPersonality(String pers) throws LoadException {
+        for(IPowerUp c : powerUps)
             if(c.matchPersonality(pers))
                 return c;
         throw new LoadException(LoadException.ErrorCode.PERSONALITY_NOT_FOUND, pers);
     }
     
-    private IProperties searchPropertyByPersonalityAndLevelID(String pers, String levelID) throws LoadException{
-        for(IProperties p : properties.get(pers))
-            if(levelID.equals(p.getPropertyByKey("levelID")))
-                return p;
+    private IPowerUpProperties searchPropertyByPersonalityAndLevelID(String pers, String levelID) throws LoadException{
+        for(IPowerUpProperties prop : powerUpProp.get(pers))
+            if(levelID.equals(prop.getPropertyByKey("levelID")))
+                return prop;
         throw new LoadException(LoadException.ErrorCode.NO_LEVELID_MATCH, levelID);
     }
     
@@ -290,20 +290,18 @@ public class ResourceManager {
     }
     
 // ===========================================================================================================
-    public IUpdatable getPlayerByType(String pers) throws LoadException {
-        for(ICloneable c : this.prototypes)
-            if(c.matchPersonality(pers))
-                return (IUpdatable) c.clone();
-        throw new LoadException(LoadException.ErrorCode.CREATURE_NOT_FOUND, pers);
+    public IPlayer getPlayerByType(AvailablePlayer playerType) throws LoadException {
+        for(IPlayer c : this.players)
+            if(c.matchPersonality(playerType.name()))
+                return c;
+        throw new LoadException(LoadException.ErrorCode.CREATURE_NOT_FOUND, playerType.name());
     }
     
-    public IUpdatable getLevel(String pers) throws LoadException {
-        for(Iterator<IUpdatable> it = this.levelPrototypes.iterator(); it.hasNext();){
-            ICloneable env = (ICloneable) it.next();
-            if(env.matchPersonality(pers))
-                return (IUpdatable) env;
-        }
-        throw new LoadException(LoadException.ErrorCode.ENVIRONMENT_NOT_FOUND, pers);
+    public IEnvironment getLevelByType(AvailableEnvironment envType) throws LoadException {
+        for(IEnvironment e : this.env)
+            if(e.matchPersonality(envType.name()))
+                return e;
+        throw new LoadException(LoadException.ErrorCode.ENVIRONMENT_NOT_FOUND, envType.name());
     }
     
 }

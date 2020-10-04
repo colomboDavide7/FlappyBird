@@ -1,20 +1,24 @@
 definition = bird
-definition = wallup
-definition = walldown
+definition = upperWall
+definition = downWall
 definition = easy
 
 ==============================
 # PERS_property = filename
 
 # Animations
-bird_animation     = bird_animation.txt
-wallup_animation   = wallup_animation.txt
-walldown_animation = walldown_animation.txt
+bird_animation      = bird_animation.txt
+upperWall_animation = upperWall_animation.txt
+downWall_animation  = downWall_animation.txt
 
-# Level
-wallup_config   = wallup_config.txt
-walldown_config = walldown_config.txt
-easy_config     = easy_config.txt
+# PowerUp config
+upperWall_cloneconfig = upperWall_cloneconfig.txt
+downWall_cloneconfig  = downWall_cloneconfig.txt
 
+# Enemies config
+
+
+# Level config
+easy_config = easy_config.txt
 
 ==============================

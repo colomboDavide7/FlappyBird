@@ -5,44 +5,45 @@
  */
 package flappybird.environment;
 
-import flappybird.properties.IProperties;
-import flappybird.resources.LoadException;
+import flappybird.players.IPlayer;
+import flappybird.powerUp.IPowerUp;
 import java.awt.Graphics;
+import java.awt.image.BufferedImage;
+import java.util.List;
 
 /**
  *
  * @author davidecolombo
  */
-public class EasyEnvironment implements IEnvironment {
+public class EasyEnvironment extends Environment {
 
-    @Override
-    public void configure(IProperties myProperties) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public EasyEnvironment(AvailableEnvironment pers, BufferedImage bck, List<IPowerUp> powerUp) {
+        super(pers, bck, powerUp);
     }
-
-    @Override
-    public void putProperty(String key, String value) throws LoadException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public String getProperty(String key) throws LoadException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean matchPersonality(String pers) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
+    
     @Override
     public void update() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        for(IPowerUp pw : super.powerUp)
+            pw.update();
     }
 
     @Override
     public void draw(Graphics g) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        g.drawImage(background, 0, 0, null);
+        
+        for(IPowerUp pw : powerUp)
+            pw.draw(g);
+    }
+    
+    @Override
+    public boolean matchPersonality(String pers) {
+        return pers.equals(super.personality.name());
+    }
+
+    @Override
+    public void checkCollision(IPlayer player) {
+        for(IPowerUp pw : powerUp)
+            pw.powerUp(player);
     }
     
 }

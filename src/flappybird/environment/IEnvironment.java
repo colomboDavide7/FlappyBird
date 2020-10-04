@@ -5,15 +5,17 @@
  */
 package flappybird.environment;
 
-import flappybird.generalInterfaces.IConfigurable;
 import flappybird.generalInterfaces.IRenderable;
+import flappybird.generalInterfaces.ISearchable;
 import flappybird.generalInterfaces.IUpdatable;
+import flappybird.players.IPlayer;
 
 /**
  *
  * @author davidecolombo
  */
-public interface IEnvironment extends IConfigurable, IUpdatable, IRenderable {
+public interface IEnvironment extends IUpdatable, IRenderable, ISearchable {
     
+    public abstract void checkCollision(IPlayer player);
     
 }

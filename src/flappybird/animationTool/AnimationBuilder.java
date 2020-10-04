@@ -5,17 +5,15 @@
  */
 package flappybird.animationTool;
 
-import flappybird.resources.AnimationType;
-import flappybird.properties.IProperties;
 import flappybird.resources.LoadException;
 
-import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.imageio.ImageIO;
+import flappybird.properties.IBaseProperties;
 
 /**
  *
@@ -23,7 +21,7 @@ import javax.imageio.ImageIO;
  */
 public class AnimationBuilder {
 
-    public static IAnimation build(IProperties prop) throws AnimationToolException {        
+    public static IAnimation build(IBaseProperties prop) throws AnimationToolException {        
         try {
             String path = prop.getPropertyByKey("path");
             BufferedImage sheet = tryToReadImage(path);
@@ -45,7 +43,7 @@ public class AnimationBuilder {
         }
     }
     
-    private static AnimationType getTypeFromProperty(IProperties prop) throws AnimationToolException{
+    private static AnimationType getTypeFromProperty(IBaseProperties prop) throws AnimationToolException{
         try {
             String type = prop.getPropertyByKey("type");
             
@@ -57,7 +55,7 @@ public class AnimationBuilder {
         }
     }
     
-    private static List<BufferedImage> getSpriteListFromProperty(IProperties prop, BufferedImage sheet) throws AnimationToolException {
+    private static List<BufferedImage> getSpriteListFromProperty(IBaseProperties prop, BufferedImage sheet) throws AnimationToolException {
         try{
             int upperLeftX = 0;
             int upperLeftY = 0;

@@ -5,15 +5,16 @@
  */
 package flappybird.players;
 
-import flappybird.resources.AnimationType;
+import flappybird.animationTool.AnimationType;
 import flappybird.generalInterfaces.IRenderable;
+import flappybird.generalInterfaces.ISearchable;
 import flappybird.generalInterfaces.IUpdatable;
 
 /**
  *
  * @author davidecolombo
  */
-public interface IPlayer extends IUpdatable, IRenderable {
+public interface IPlayer extends IUpdatable, IRenderable, ISearchable {
     
     public abstract void updateAnimation(AnimationType type);
     
@@ -22,5 +23,11 @@ public interface IPlayer extends IUpdatable, IRenderable {
     public abstract void jump();
     
     public abstract void fall();
+    
+    public abstract void kill();
+    
+    public abstract boolean isAlive();
+    
+    public abstract boolean matchPosition(int x, int y);
     
 }

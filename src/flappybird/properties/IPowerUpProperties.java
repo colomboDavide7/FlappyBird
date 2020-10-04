@@ -3,16 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package flappybird.generalInterfaces;
+package flappybird.properties;
 
-import flappybird.properties.IBaseProperties;
+import flappybird.generalInterfaces.ICloneable;
 
 /**
  *
  * @author davidecolombo
  */
-public interface IConfigurable {
-    
-    public abstract void configure(IBaseProperties myProp);
+public interface IPowerUpProperties extends IBaseProperties, ICloneable {
     
 }

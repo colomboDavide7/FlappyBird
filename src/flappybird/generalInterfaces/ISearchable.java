@@ -3,14 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package flappybird.resources;
+package flappybird.generalInterfaces;
 
 /**
  *
  * @author davidecolombo
  */
-public interface IAvailable {
+public interface ISearchable {
     
-    public abstract String getMyPersonality();
+    public abstract boolean matchPersonality(String pers);
     
 }

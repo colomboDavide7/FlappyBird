@@ -5,28 +5,29 @@
  */
 package flappybird.environment;
 
-import flappybird.properties.IProperties;
-import flappybird.resources.LoadException;
+import flappybird.players.IPlayer;
+import flappybird.powerUp.IPowerUp;
 import java.awt.Graphics;
+import java.awt.image.BufferedImage;
+import java.util.List;
 
 /**
  *
  * @author davidecolombo
  */
-public class MediumEnvironment implements IEnvironment {
+public class MediumEnvironment extends Environment {
 
+    public MediumEnvironment(AvailableEnvironment pers, BufferedImage bck, List<IPowerUp> powerUp) {
+        super(pers, bck, powerUp);
+    }
+    
     @Override
-    public void configure(IProperties myProperties) {
+    public void update() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void putProperty(String key, String value) throws LoadException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public String getProperty(String key) throws LoadException {
+    public void draw(Graphics g) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -36,13 +37,9 @@ public class MediumEnvironment implements IEnvironment {
     }
 
     @Override
-    public void update() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void draw(Graphics g) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void checkCollision(IPlayer player) {
+        for(IPowerUp pw : powerUp)
+            pw.powerUp(player);
     }
     
 }

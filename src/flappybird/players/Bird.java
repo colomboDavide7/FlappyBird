@@ -6,9 +6,8 @@
 package flappybird.players;
 
 import flappybird.animationTool.IAnimation;
-import flappybird.resources.AnimationType;
+import flappybird.animationTool.AnimationType;
 import java.awt.Graphics;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,21 +20,21 @@ public class Bird implements IPlayer {
     private final double GRAVITY = 0.64;
     private final double MAX_FALLING_SPEED = 6;
     
+    private AvailablePlayer personality;
     private List<IAnimation> animations;
     private IAnimation currentAnimation;
     
-    private double xPosition;
-    private double yPosition;
+    private int xPosition;
+    private int yPosition;
     private double dy = 0;
     private boolean jumping = false;
+    private boolean isAlive = false;
     
-    public Bird(List<IAnimation> animations) {
+    public Bird(List<IAnimation> animations, AvailablePlayer pers) {
         this.animations       = animations;
         this.currentAnimation = animations.get(0);
-    }
-    
-    private Bird(){
-        this.animations = new ArrayList<>();
+        this.personality      = pers;
+        this.isAlive = true;
     }
     
     private void setCurrentAnimationByType(AnimationType type){
@@ -70,19 +69,25 @@ public class Bird implements IPlayer {
         this.jumping = false;
     }
     
-// ==================================================================
-    // ICloneable's inherited methods
-// ==================================================================
     @Override
-    public Bird clone() {
-        Bird clone = new Bird();
+    public void kill() {
+        // Update kill animation
         
-        for(IAnimation a : animations)
-            clone.animations.add(a.clone());
-        clone.currentAnimation = this.animations.get(0);
-        return clone;
+        // Update flag kill
+        isAlive = false;
     }
     
+    @Override
+    public boolean isAlive() {
+        return isAlive;
+    }
+    
+    @Override
+    public boolean matchPosition(int x, int y) {
+        return (this.xPosition <= x && (this.xPosition + currentAnimation.getFrame().getWidth()) >= x &&
+                this.yPosition <= y && (this.yPosition + currentAnimation.getFrame().getHeight()) >= y);
+    }
+        
 // ==================================================================
     // IUpdatable's inherited methods
 // ==================================================================
@@ -109,6 +114,14 @@ public class Bird implements IPlayer {
                     (int) xPosition, 
                     (int) yPosition, 
                     null);
+    }
+
+// ==================================================================
+    // ISearchable's inherited methods
+// ==================================================================
+    @Override
+    public boolean matchPersonality(String pers) {
+        return pers.equals(this.personality.name());
     }
     
 }

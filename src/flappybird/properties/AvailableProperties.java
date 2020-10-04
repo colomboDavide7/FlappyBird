@@ -10,7 +10,7 @@ package flappybird.properties;
  * @author davidecolombo
  */
 public enum AvailableProperties {
-    animation, config;
+    animation, config, cloneconfig;
     
     public static boolean isValid(String myProp) {
         for(AvailableProperties prop : AvailableProperties.values())

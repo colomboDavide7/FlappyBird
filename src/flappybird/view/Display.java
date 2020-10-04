@@ -39,7 +39,7 @@ public class Display extends JPanel {
     protected void paintComponent(Graphics g){
         super.paintComponent(g);
         if(board != null)
-            board.drawBoard(g);
+            board.draw(g);
     }
     
 }

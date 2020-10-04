@@ -11,7 +11,7 @@ import flappybird.resources.LoadException;
  *
  * @author davidecolombo
  */
-public interface IProperties {
+public interface IBaseProperties {
     
     public abstract String getPropertyByKey(String key) throws LoadException;
     

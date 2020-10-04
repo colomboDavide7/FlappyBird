@@ -8,13 +8,14 @@ package flappybird.properties;
 import flappybird.resources.LoadException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  *
  * @author davidecolombo
  */
-public class WallProperties implements IProperties {
-    
+public class WallProperties implements IPowerUpProperties {
+
     public enum ValidProperties{
         levelID, howmany, hspace, maxrandom, slotheight;
     }
@@ -40,6 +41,15 @@ public class WallProperties implements IProperties {
         if(!isValid(key))
             throw new LoadException(LoadException.ErrorCode.INVALID_PROPERTY, key);
         myProperties.put(key, value);
+    }
+    
+    @Override
+    public WallProperties cloneObject() throws LoadException {
+        WallProperties clone = new WallProperties();
+        Set<String> keyset = myProperties.keySet();
+        for(String key : keyset)
+            clone.putProperty(key, myProperties.get(key));
+        return clone;
     }
     
 }

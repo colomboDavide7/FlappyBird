@@ -5,20 +5,23 @@
  */
 package flappybird.powerUp;
 
+import flappybird.animationTool.IAnimation;
+import java.util.List;
+
 /**
  *
  * @author davidecolombo
  */
 public class SimplePowerUpFactory {
     
-    public static IPowerUp createPowerUpByType(AvailablePowerUp type){
+    public static IPowerUp createPowerUpByType(AvailablePowerUp type, List<IAnimation> animations){
         IPowerUp powerUp = null;
         switch(type){
             case upperWall: 
-                powerUp = new UpperWall();
+                powerUp = new UpperWall(animations, type);
                 break;
             case downWall:
-                powerUp = new DownWall();
+                powerUp = new DownWall(animations, type);
                 break;
         }
         

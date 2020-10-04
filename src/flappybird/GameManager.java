@@ -5,12 +5,13 @@
  */
 package flappybird;
 
-import flappybird.resources.AnimationType;
+import flappybird.animationTool.AnimationType;
 import flappybird.engine.Clock;
-import flappybird.players.Bird;
-import flappybird.resources.Environment;
+import flappybird.environment.AvailableEnvironment;
+import flappybird.environment.Environment;
 import flappybird.players.IPlayer;
 import flappybird.generalInterfaces.IUpdatable;
+import flappybird.players.AvailablePlayer;
 import flappybird.resources.LoadException;
 import flappybird.resources.ResourceManager;
 import flappybird.view.Display;
@@ -51,20 +52,17 @@ public class GameManager implements Observer, KeyListener {
         this.resManager = ResourceManager.getInstance();
         this.resManager.loadResources(propertyFile);
         
-        IUpdatable currentEnvironment = resManager.getLevel("easy");
-        IUpdatable currentPlayer      = resManager.getPlayerByType("bird");
-        
         // Board
         this.board = new GameBoard();
-        this.board.setPlayer(currentPlayer);
-        this.board.setEnvironment(currentEnvironment);
+        this.board.setPlayer(resManager.getPlayerByType(AvailablePlayer.bird));
+        this.board.setEnvironment(resManager.getLevelByType(AvailableEnvironment.easy));
         
         // Configuration
-        Environment env = (Environment) currentEnvironment;
+        Environment env = (Environment) board.getCurrentEnvironment();
         int widthInPixel = env.getWidthInPixel();
         int heightInPixel = env.getHeightInPixel();
         
-        IPlayer ply = (IPlayer) currentPlayer;
+        IPlayer ply = (IPlayer) board.getCurrentPlayer();
         ply.setLocation(widthInPixel / 2, heightInPixel / 2);
         
         // Screen
@@ -91,8 +89,13 @@ public class GameManager implements Observer, KeyListener {
         EventObject evt = (EventObject) arg; 
         
         if(evt instanceof Clock.TimerTickEvent){
-            this.board.updateEnvironment();
+            this.board.update();
             this.board.timerTick();
+        }else if(evt instanceof GameBoard.GameOverEvent){
+            clock.gameOver();
+            System.out.println("game over");
+            // Set pannello grafico game over
+            
         }
     }
 

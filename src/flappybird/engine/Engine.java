@@ -5,10 +5,6 @@
  */
 package flappybird.engine;
 
-import java.util.EventObject;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 /**
  *
  * @author davidecolombo
@@ -17,6 +13,7 @@ class Engine extends Thread {
     
     private Clock clock;
     private int fps;
+    private boolean gameOver = false;
     
     Engine(Clock clock, int fps){
         this.clock = clock;
@@ -27,9 +24,13 @@ class Engine extends Thread {
         this.start();
     }
     
+    void stopEngine(){
+        gameOver = true;
+    }
+    
     @Override
     public void run(){
-        while(true){
+        while(!gameOver){
             cycle();
         }
     }

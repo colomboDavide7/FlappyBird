@@ -5,14 +5,14 @@
  */
 package flappybird.generalInterfaces;
 
+import flappybird.resources.LoadException;
+
 /**
  *
  * @author davidecolombo
  */
 public interface ICloneable {
     
-    public abstract ICloneable clone();
-    
-    public abstract boolean matchPersonality(String pers);
+    public abstract Object cloneObject() throws LoadException;
     
 }

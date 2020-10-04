@@ -5,7 +5,6 @@
  */
 package flappybird.players;
 
-import flappybird.players.Bird;
 import flappybird.animationTool.IAnimation;
 import flappybird.resources.LoadException;
 import java.util.List;
@@ -23,7 +22,7 @@ public class SimplePlayerFactory {
         IPlayer player = null;
         switch(requestedType){
             case bird:
-                player = new Bird(animations);
+                player = new Bird(animations, requestedType);
                 break;
             default:
                 throw new LoadException(LoadException.ErrorCode.INVALID_PLAYER_TYPE, requestedType.name());

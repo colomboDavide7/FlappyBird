@@ -5,35 +5,64 @@
  */
 package flappybird;
 
-import flappybird.resources.AnimationType;
-import flappybird.players.IPlayer;
+import flappybird.animationTool.AnimationType;
+import flappybird.environment.IEnvironment;
 import flappybird.generalInterfaces.IRenderable;
 import flappybird.generalInterfaces.IUpdatable;
+import flappybird.players.IPlayer;
 import flappybird.view.Display;
 import java.awt.Graphics;
+import java.util.EventObject;
+import java.util.Observable;
 
 /**
  *
  * @author davidecolombo
  */
-public class GameBoard {
+public class GameBoard extends Observable implements IUpdatable, IRenderable {
     
-    private Display disp;
-    private IPlayer animatedPlayer;
-    private IUpdatable player;
-    private IRenderable renderablePlayer;
-    private IUpdatable environment;
-    private IRenderable renderableEnvironment;
-    
-    void setPlayer(IUpdatable player){
-        this.player = player;
-        this.renderablePlayer = (IRenderable) player;
-        this.animatedPlayer = (IPlayer) player;
+    public class GameOverEvent extends EventObject{
+
+        public GameOverEvent(Object source) {
+            super(source);
+        }
+
     }
     
-    void setEnvironment(IUpdatable env){
-        this.environment = env;
-        this.renderableEnvironment = (IRenderable) env;
+    private Display disp;
+    private IPlayer player;
+    private IEnvironment env;
+    
+    @Override
+    public void update(){
+        this.env.update();
+        this.player.update();
+        this.env.checkCollision(player);
+        
+        if(!player.isAlive())
+            gameOver();
+    }
+
+    @Override
+    public void draw(Graphics g) {
+        this.env.draw(g);
+        this.player.draw(g);
+    }
+    
+    void setPlayer(IPlayer player){
+        this.player = player;
+    }
+    
+    void setEnvironment(IEnvironment env){
+        this.env = env;
+    }
+    
+    IEnvironment getCurrentEnvironment(){
+        return this.env;
+    }
+    
+    IPlayer getCurrentPlayer(){
+        return this.player;
     }
     
     void setDisplay(Display disp){
@@ -50,25 +79,20 @@ public class GameBoard {
     }
     
     void updatePlayer(AnimationType type){
-        animatedPlayer.updateAnimation(type);
+        player.updateAnimation(type);
     }
     
     void jump(){
-        this.animatedPlayer.jump();
+        this.player.jump();
     }
     
     void fall(){
-        this.animatedPlayer.fall();
+        this.player.fall();
     }
     
-    void updateEnvironment(){
-        this.environment.update();
-        this.player.update();
-    }
-    
-    public void drawBoard(Graphics g){
-        this.renderableEnvironment.draw(g);
-        this.renderablePlayer.draw(g);
+    private void gameOver(){
+        this.setChanged();
+        this.notifyObservers(new GameOverEvent(this));
     }
     
 }

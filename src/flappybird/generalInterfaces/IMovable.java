@@ -5,14 +5,18 @@
  */
 package flappybird.generalInterfaces;
 
-import flappybird.properties.IBaseProperties;
-
 /**
  *
  * @author davidecolombo
  */
-public interface IConfigurable {
+public interface IMovable {
     
-    public abstract void configure(IBaseProperties myProp);
+    public abstract void setXPositionInPixel(int x);
+    
+    public abstract void setYPositionInPixel(int y);
+    
+    public abstract int getXPositionInPixel();
+    
+    public abstract int getYPositionInPixel();
     
 }

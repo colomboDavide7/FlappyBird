@@ -5,56 +5,88 @@
  */
 package flappybird.powerUp;
 
-import flappybird.generalInterfaces.ICloneable;
+import flappybird.animationTool.IAnimation;
 import flappybird.players.IPlayer;
-import flappybird.properties.IProperties;
-import flappybird.resources.LoadException;
 import java.awt.Graphics;
+import flappybird.properties.IBaseProperties;
+import java.awt.image.BufferedImage;
+import java.util.List;
 
 /**
  *
  * @author davidecolombo
  */
-public class UpperWall implements IPowerUp {
-
+public class UpperWall extends Wall {
+    
+    public UpperWall(List<IAnimation> myAnimations, AvailablePowerUp personality) {
+        super(myAnimations, personality);
+    }
+    
+    protected UpperWall(){
+        super();
+    }
+    
     @Override
     public void powerUp(IPlayer player) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(player.matchPosition(xPosition, yPosition))
+            player.kill();
     }
 
     @Override
-    public ICloneable clone() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Wall cloneObject() {
+        Wall clone = new UpperWall();
+        clone.personality = AvailablePowerUp.valueOf(personality.name());
+        for(IAnimation a : myAnimations)
+            clone.myAnimations.add(a.clone());
+        clone.currentAnimation = clone.myAnimations.get(0);
+        return clone;
     }
-
-    @Override
-    public boolean matchPersonality(String pers) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
+    
     @Override
     public void update() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(xPosition <= 0)
+            xPosition = 288;
+        else
+            xPosition -= 2;
     }
 
     @Override
     public void draw(Graphics g) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        BufferedImage frame = super.currentAnimation.getFrame();
+        g.drawImage(frame.getSubimage(upperLeftX, upperLeftY, 32, totalHeight), 
+                    xPosition, 
+                    yPosition, 
+                    null);
     }
 
     @Override
-    public void configure(IProperties myProperties) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void configure(IBaseProperties myProperties) {
+        super.myProp = myProperties;
     }
 
     @Override
-    public void putProperty(String key, String value) throws LoadException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void setXPositionInPixel(int x) {
+        super.xPosition = x;
     }
 
     @Override
-    public String getProperty(String key) throws LoadException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void setYPositionInPixel(int y) {
+        super.yPosition = y;
+    }
+
+    @Override
+    public int getXPositionInPixel() {
+        return super.xPosition;
+    }
+
+    @Override
+    public int getYPositionInPixel() {
+        return super.yPosition;
+    }
+
+    @Override
+    public boolean matchPersonality(String pers) {
+        return pers.equals(super.personality.name());
     }
     
 }

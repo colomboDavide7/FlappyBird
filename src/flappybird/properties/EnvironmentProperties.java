@@ -13,7 +13,7 @@ import java.util.Map;
  *
  * @author davidecolombo
  */
-public class EnvironmentProperties implements IProperties {
+public class EnvironmentProperties implements IBaseProperties {
 
     public enum ValidProperties{
         path, levelID;

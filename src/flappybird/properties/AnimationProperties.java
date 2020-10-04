@@ -8,14 +8,13 @@ package flappybird.properties;
 import flappybird.resources.LoadException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 /**
  *
  * @author davidecolombo
  */
-public class AnimationProperties implements IProperties {
-
+public class AnimationProperties implements IBaseProperties {
+     
     public enum ValidProperties{
         path, frame, row, col, mirroring, flipping, type;
     }
