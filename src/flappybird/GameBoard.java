@@ -36,7 +36,8 @@ public class GameBoard extends Observable implements IUpdatable, IRenderable {
     @Override
     public void update(){
         this.env.update();
-        this.player.update();
+        if(player.isAlive())
+            this.player.update();
         this.env.checkCollision(player);
         
         if(!player.isAlive())

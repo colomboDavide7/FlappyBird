@@ -28,6 +28,6 @@ public interface IPlayer extends IUpdatable, IRenderable, ISearchable {
     
     public abstract boolean isAlive();
     
-    public abstract boolean matchPosition(int x, int y);
+    public abstract boolean matchPosition(int x, int y, int w, int h);
     
 }

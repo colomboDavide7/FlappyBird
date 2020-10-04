@@ -18,7 +18,7 @@ public class Bird implements IPlayer {
 
     private final double FLY_START = -4.0;
     private final double GRAVITY = 0.64;
-    private final double MAX_FALLING_SPEED = 6;
+    private final double MAX_FALLING_SPEED = 9;
     
     private AvailablePlayer personality;
     private List<IAnimation> animations;
@@ -83,9 +83,9 @@ public class Bird implements IPlayer {
     }
     
     @Override
-    public boolean matchPosition(int x, int y) {
-        return (this.xPosition <= x && (this.xPosition + currentAnimation.getFrame().getWidth()) >= x &&
-                this.yPosition <= y && (this.yPosition + currentAnimation.getFrame().getHeight()) >= y);
+    public boolean matchPosition(int x, int y, int w, int h) {
+        return this.xPosition >= x && this.xPosition <= (x + w) &&
+               this.yPosition >= y && this.yPosition <= (y + h);
     }
         
 // ==================================================================

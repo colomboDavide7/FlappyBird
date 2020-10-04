@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.util.List;
 import javax.imageio.ImageIO;
 import flappybird.properties.IBaseProperties;
-import java.util.ArrayList;
 
 /**
  *

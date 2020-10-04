@@ -10,7 +10,6 @@ import flappybird.engine.Clock;
 import flappybird.environment.AvailableEnvironment;
 import flappybird.environment.Environment;
 import flappybird.players.IPlayer;
-import flappybird.generalInterfaces.IUpdatable;
 import flappybird.players.AvailablePlayer;
 import flappybird.resources.LoadException;
 import flappybird.resources.ResourceManager;
@@ -56,6 +55,7 @@ public class GameManager implements Observer, KeyListener {
         this.board = new GameBoard();
         this.board.setPlayer(resManager.getPlayerByType(AvailablePlayer.bird));
         this.board.setEnvironment(resManager.getLevelByType(AvailableEnvironment.easy));
+        this.board.addObserver(this);
         
         // Configuration
         Environment env = (Environment) board.getCurrentEnvironment();
@@ -93,7 +93,7 @@ public class GameManager implements Observer, KeyListener {
             this.board.timerTick();
         }else if(evt instanceof GameBoard.GameOverEvent){
             clock.gameOver();
-            System.out.println("game over");
+            System.out.println("!!GAME OVER EVENT!!");
             // Set pannello grafico game over
             
         }

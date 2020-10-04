@@ -42,7 +42,7 @@ public class EasyEnvironment extends Environment {
 
     @Override
     public void checkCollision(IPlayer player) {
-        for(IPowerUp pw : powerUp)
+        for(IPowerUp pw : super.powerUp)
             pw.powerUp(player);
     }
     

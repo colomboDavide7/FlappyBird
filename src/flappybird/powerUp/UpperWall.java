@@ -28,7 +28,7 @@ public class UpperWall extends Wall {
     
     @Override
     public void powerUp(IPlayer player) {
-        if(player.matchPosition(xPosition, yPosition))
+        if(player.matchPosition(xPosition, yPosition, 32, totalHeight))
             player.kill();
     }
 
