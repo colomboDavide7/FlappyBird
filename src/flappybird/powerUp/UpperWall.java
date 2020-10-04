@@ -31,7 +31,7 @@ public class UpperWall extends Wall {
         if(player.matchPosition(xPosition, yPosition, this.currentAnimation.getFrame().getWidth(), totalHeight))
             player.kill();
     }
-
+    
     @Override
     public Wall cloneObject() {
         Wall clone = new UpperWall();

@@ -7,6 +7,7 @@ package flappybird.view;
 
 import java.awt.Color;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 
 /**
  *
@@ -15,6 +16,7 @@ import javax.swing.JFrame;
 public class Screen extends JFrame {
     
     private Display display;
+//    private JLabel message;
     
     public Screen(int w, int h){
         initializeScreen(w, h);
@@ -31,6 +33,12 @@ public class Screen extends JFrame {
     
     private void initializeScreen(int w, int h){
         this.display = new Display(w, h);
+        
+//        this.message = new JLabel("New Game");
+//        this.message.setForeground(Color.BLACK);
+//        this.message.setFont(new Font("Arial", 1, 18));
+//        this.message.setVisible(true);
+//        display.add(message);
         
         this.setBackground(Color.BLACK);
         this.getContentPane().add(this.display);

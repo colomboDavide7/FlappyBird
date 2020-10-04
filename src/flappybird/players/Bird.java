@@ -84,8 +84,10 @@ public class Bird implements IPlayer {
     
     @Override
     public boolean matchPosition(int x, int y, int w, int h) {
-        return this.xPosition >= x && this.xPosition <= (x + w) &&
-               this.yPosition >= y && this.yPosition <= (y + h);
+        int xFacePosition   = this.xPosition + this.currentAnimation.getFrame().getWidth();
+        int yBottomPosition = this.yPosition + this.currentAnimation.getFrame().getHeight();
+        return xFacePosition >= x && xFacePosition <= (x + w) &&
+               yBottomPosition >= y && yBottomPosition <= (y + h);
     }
         
 // ==================================================================

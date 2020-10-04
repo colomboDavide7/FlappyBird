@@ -16,8 +16,8 @@ import javax.swing.JPanel;
  */
 public class Display extends JPanel {
     
-    private GameBoard board;
-            
+    private GameBoard board; 
+    
     public Display(int w, int h){
         initDisplay(w, h);
     }
