@@ -28,7 +28,7 @@ public class UpperWall extends Wall {
     
     @Override
     public void powerUp(IPlayer player) {
-        if(player.matchPosition(xPosition, yPosition, 32, totalHeight))
+        if(player.matchPosition(xPosition, yPosition, this.currentAnimation.getFrame().getWidth(), totalHeight))
             player.kill();
     }
 
@@ -44,16 +44,16 @@ public class UpperWall extends Wall {
     
     @Override
     public void update() {
-        if(xPosition <= 0)
-            xPosition = 288;
+        if((xPosition + this.currentAnimation.getFrame().getWidth()) <= 0)
+            xPosition = 500;
         else
-            xPosition -= 2;
+            xPosition -= 3;
     }
 
     @Override
     public void draw(Graphics g) {
         BufferedImage frame = super.currentAnimation.getFrame();
-        g.drawImage(frame.getSubimage(upperLeftX, upperLeftY, 32, totalHeight), 
+        g.drawImage(frame.getSubimage(upperLeftX, upperLeftY, this.currentAnimation.getFrame().getWidth(), totalHeight), 
                     xPosition, 
                     yPosition, 
                     null);

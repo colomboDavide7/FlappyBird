@@ -9,7 +9,7 @@ import flappybird.animationTool.IAnimation;
 import flappybird.players.IPlayer;
 import java.awt.Graphics;
 import flappybird.properties.IBaseProperties;
-import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.util.List;
 
 /**
@@ -28,7 +28,7 @@ public class DownWall extends Wall {
     
     @Override
     public void powerUp(IPlayer player) {
-        if(player.matchPosition(xPosition, yPosition, 32, totalHeight))
+        if(player.matchPosition(xPosition, yPosition, this.currentAnimation.getFrame().getWidth(), totalHeight))
             player.kill();
     }
 
@@ -44,16 +44,19 @@ public class DownWall extends Wall {
 
     @Override
     public void update() {
-        if(xPosition <= 0)
-            xPosition = 288;
+        if((xPosition + this.currentAnimation.getFrame().getWidth()) <= 0)
+            xPosition = 500;
         else
-            xPosition -= 2;
+            xPosition -= 3;
     }
 
     @Override
     public void draw(Graphics g) {
-        Image subImg = super.currentAnimation.getFrame().getSubimage(super.upperLeftX, super.upperLeftY, 32, super.totalHeight);
-        g.drawImage(subImg, xPosition, yPosition, null);
+        BufferedImage frame = super.currentAnimation.getFrame();
+        g.drawImage(frame.getSubimage(upperLeftX, upperLeftY, this.currentAnimation.getFrame().getWidth(), totalHeight), 
+                    xPosition, 
+                    yPosition, 
+                    null);
     }
 
     @Override

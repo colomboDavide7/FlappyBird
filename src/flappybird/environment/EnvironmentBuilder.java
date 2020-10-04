@@ -42,7 +42,7 @@ public class EnvironmentBuilder {
                 prototype = new HardEnvironment(pers, bck, powerUp);
                 break;
             default:
-                // throw environment builder exception
+                // TODO throw environment builder exception
         }
         
         return prototype;

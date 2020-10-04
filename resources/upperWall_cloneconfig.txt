@@ -11,7 +11,7 @@
 
 levelID = easy_wall
 howmany = 3
-hspace  = 160
+hspace  = 200
 maxrandom = 48
 slotheight = 96
 
